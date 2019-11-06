@@ -35,7 +35,7 @@ private:
     /*
      * Stream buffer length/position
      */
-    unsigned int pos;
+    size_t pos;
 
     /*
      * Swap endian
@@ -45,7 +45,7 @@ private:
     /*
      * Number of entries in buff
      */
-    unsigned int numberOfEntries;
+    size_t numberOfEntries;
 
     /*
      * Read byte stream into variable
@@ -53,7 +53,7 @@ private:
      */
     template<class T>
     unsigned int read_stream(T& var) {
-        unsigned int remainingValues = available();
+        size_t remainingValues = available();
         if (remainingValues < sizeof(T))
             return END_OF_STREAM;
 
@@ -78,10 +78,10 @@ private:
      * (float, double)
      */
     template<class T>
-    unsigned int read_stream_float(T& var) {
+    bool read_stream_float(T& var) {
         std::vector<unsigned char> data;
 
-        unsigned int remainingValues = available();
+        size_t remainingValues = available();
         if (remainingValues < sizeof(T))
             return END_OF_STREAM;
 
@@ -91,7 +91,7 @@ private:
         }
         if (swap)
             swap_endian(data);
-        var = atof((char*) data.data());
+        var = static_cast<T>(atof((char*) data.data()));
         return SUCCESS;
     }
 
@@ -279,7 +279,7 @@ public:
     /*
      * Returns the available bytes left in the stream
      */
-    unsigned int available(void);
+    size_t available(void);
 
     /*
      * Clear the stream
@@ -289,7 +289,7 @@ public:
     /*
      * Returns the current position of the stream
      */
-    unsigned int get_position(void) { return pos; }
+    size_t get_position(void) { return pos; }
 
     /*
      * Returns the status of the stream
@@ -329,7 +329,7 @@ public:
     /*
      * Returns the streams total size
      */
-    unsigned int size(void) { return buff.size(); }
+    size_t size(void) { return buff.size(); }
 
     /*
      * Returns a string representation of the stream

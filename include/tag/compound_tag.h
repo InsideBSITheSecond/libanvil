@@ -122,7 +122,7 @@ public:
     /*
      * Returns a compound tag value's size
      */
-    unsigned int size(void) { return value.size(); }
+    size_t size(void) { return value.size(); }
 
     /*
      * Return a string representation of a compound tag

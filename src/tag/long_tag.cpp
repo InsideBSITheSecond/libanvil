@@ -83,7 +83,7 @@ void long_tag::get_data(bool list_ele, byte_stream& stream) {
     temp = value >> 32; //top 32 bits
     stream << temp; //top 32 bits in
 
-    temp = value; //should truncate, lower 32 bits
+    temp = static_cast<uint32_t>(value); //should truncate, lower 32 bits
     stream << temp; //lower 32 bits in
 }
 
@@ -94,7 +94,7 @@ unsigned int long_tag::get_data_size(bool list_ele) {
     unsigned int total = 0; //nothing yet
 
     if (!list_ele) {
-        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+        total += 1 + 2 + static_cast<unsigned int>(name.size()); //1 for type, 2 for short size, and every symbol in the name.
     }
 
     total += 8; //8 bytes in a long

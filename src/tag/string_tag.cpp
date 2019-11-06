@@ -88,10 +88,14 @@ unsigned int string_tag::get_data_size(bool list_ele) {
     unsigned int total = 0; //nothing yet
 
     if (!list_ele) {
-        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+        total += 1 + 2 + static_cast<unsigned int>(name.size()); //1 for type, 2 for short size, and every symbol in the name.
     }
 
-    total += 2 + value.size(); //1 byte in short size, and then chars
+    if (value.size() > UINT16_MAX) {
+        throw std::out_of_range("Size of value is bigger than expected");
+    }
+
+    total += 2 + static_cast<unsigned int>(value.size()); //1 byte in short size, and then chars
     return total;
 }
 

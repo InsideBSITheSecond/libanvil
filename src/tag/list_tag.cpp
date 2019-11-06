@@ -99,7 +99,7 @@ unsigned int list_tag::get_data_size(bool list_ele) {
     unsigned int total = 0; //nothing yet
 
     if (!list_ele) {
-        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+        total += 1 + 2 + static_cast<unsigned int>(name.size()); //1 for type, 2 for short size, and every symbol in the name.
     }
 
     total += 1 + 4; //1 for ele type, 4 for size

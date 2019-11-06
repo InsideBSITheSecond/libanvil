@@ -126,7 +126,7 @@ public:
     /*
      * Returns a long array tag value's size
      */
-    unsigned int size(void) { return value.size(); }
+    size_t size(void) { return value.size(); }
 
     /*
      * Return a string representation of a long array tag

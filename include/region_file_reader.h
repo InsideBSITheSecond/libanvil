@@ -127,7 +127,7 @@ private:
 
     std::vector<Block> get_blocks_from_subchunk(compound_tag *sectionEntry, unsigned int x, unsigned int z);
 
-    uint64_t getPaletteIndex(std::vector<int64_t> const &blockStateEntries, size_t offset, size_t bitPerIndex);
+    uint64_t getPaletteIndex(std::vector<int64_t> const &blockStateEntries, unsigned int offset, unsigned int bitPerIndex);
 
 public:
 

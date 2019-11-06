@@ -28,7 +28,8 @@ private:
     /*
      * Time last modified, offset, and data length
      */
-    unsigned int modified, offset, length;
+    unsigned int modified;
+    size_t offset, length;
 
     /*
      * Compression type
@@ -86,7 +87,7 @@ public:
     /*
      * Return a chunk's data length
      */
-    unsigned int get_length(void) { return length; }
+    size_t get_length(void) { return length; }
 
     /*
      * Return a chunk's time last modified
@@ -96,7 +97,7 @@ public:
     /*
      * Return a chunk's file offset
      */
-    unsigned int get_offset(void) { return offset; }
+    size_t get_offset(void) { return offset; }
 
     /*
      * Return a chunk's compression type
@@ -106,7 +107,7 @@ public:
     /*
      * Set a chunk's data length
      */
-    void set_length(unsigned int length) { this->length = length; }
+    void set_length(size_t length) { this->length = length; }
 
     /*
      * Set a chunk's time last modified
@@ -116,7 +117,7 @@ public:
     /*
      * Set a chunk's file offset
      */
-    void set_offset(unsigned int offset) { this->offset = offset; }
+    void set_offset(size_t offset) { this->offset = offset; }
 
     /*
      * Set a chunk's compression type

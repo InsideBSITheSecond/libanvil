@@ -59,10 +59,10 @@ bool region_file_writer::operator==(const region_file_writer& other) {
  * Write a region file to file
  */
 void region_file_writer::write(void) {
-    unsigned char count;
-    unsigned int offset, remaining;
+    size_t count;
+    size_t offset, remaining;
     std::vector<char> header_data;
-    unsigned int pos = region_dim::HEADER_OFFSET;
+    size_t pos = region_dim::HEADER_OFFSET;
     byte_stream region_stream(byte_stream::SWAP_ENDIAN);
 
     // attempt to open file

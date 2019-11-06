@@ -165,8 +165,8 @@ bool byte_stream::operator>>(double& output) {
 /*
  * Returns the available bytes left in the stream
  */
-unsigned int byte_stream::available(void) {
-    unsigned int remaining = numberOfEntries - pos;
+size_t byte_stream::available(void) {
+    size_t remaining = numberOfEntries - pos;
     if (remaining <= 0)
         return END_OF_STREAM;
     return remaining;
@@ -188,7 +188,7 @@ void byte_stream::swap_endian(std::vector<unsigned char>& data) {
     std::vector<unsigned char> rev;
 
     // reverse the order of elements
-    for (int i = data.size() - 1; i >= 0; --i) {
+    for (size_t i = data.size() - 1; i >= 0; --i) {
         rev.push_back(data.at(i));
     }
     data = rev;

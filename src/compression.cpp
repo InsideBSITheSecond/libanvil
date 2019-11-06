@@ -35,7 +35,7 @@ bool compression::deflate_(std::vector<char>& data) {
     if (deflateInit(&zs, Z_BEST_COMPRESSION) != Z_OK)
         return false;
     zs.next_in = (Bytef*) data.data();
-    zs.avail_in = data.size();
+    zs.avail_in = static_cast<uInt>(data.size());
 
     // deflate blocks
     do {
@@ -73,7 +73,7 @@ bool compression::inflate_(std::vector<char>& data) {
         return false;
 
     zs.next_in = (Bytef*) data.data();
-    zs.avail_in = data.size();
+    zs.avail_in = static_cast<uInt>(data.size());
 
     // inflate blocks
     do {

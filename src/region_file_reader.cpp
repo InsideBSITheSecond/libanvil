@@ -189,12 +189,12 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
     std::vector<generic_tag*> paletteEntries = static_cast<list_tag*>(palette)->get_value();
 
     // Iterate through block states, calculate palette indices and query indices value
-    int bitPerIndex = blockStateEntries.size() * 64 / 4096;
+    int bitPerIndex = static_cast<int>(blockStateEntries.size() * 64 / 4096);
     std::vector<int> retVal(4096, 0); // 4096 times 0
 
     for (int y = 0; y < 16; ++y) {
         uint16_t blockNumber = 16 * 16 * y + 16 * z * x;
-        size_t indexOffset = blockNumber * bitPerIndex;
+        unsigned int indexOffset = blockNumber * bitPerIndex;
 
         uint64_t paletteIndex = getPaletteIndex(blockStateEntries, indexOffset, bitPerIndex);
 
@@ -215,8 +215,8 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
     return blockList;
 }
 
-uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, size_t offset, size_t bitPerIndex) {
-    size_t indexOfInterest = offset / 64;
+uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, unsigned int offset, unsigned int bitPerIndex) {
+    unsigned int indexOfInterest = offset / 64;
     unsigned int lowerBound = offset % 64;
     unsigned int upperBound = lowerBound + bitPerIndex;
     uint64_t paletteIndex = 0;
@@ -459,7 +459,7 @@ void region_file_reader::read(void) {
 /*
  * Reads chunk data from a file
  */
-void region_file_reader::read_chunks(void) {
+void region_file_reader::read_chunks() {
     chunk_info info;
 
     // check if file is open
@@ -505,7 +505,7 @@ void region_file_reader::read_chunks(void) {
 void region_file_reader::read_header(void) {
     char type;
     int value;
-    unsigned int offset;
+    size_t offset;
 
     // check if file is open
     if (!file.is_open())
@@ -565,7 +565,7 @@ std::string region_file_reader::read_string_value(byte_stream& stream) {
 
 uint64_t region_file_reader::getBits(uint64_t val, unsigned int start, unsigned int end) {
     val >>= start;
-    unsigned int relevantBits = pow(2, end - start) - 1;
+    unsigned int relevantBits = static_cast<unsigned int>(pow(2, end - start) - 1);
     val &= relevantBits;
     return val;
 }

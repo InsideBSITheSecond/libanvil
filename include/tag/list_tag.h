@@ -137,7 +137,7 @@ public:
     /*
      * Returns a list tag value's size
      */
-    unsigned int size(void) { return value.size(); }
+    size_t size(void) { return value.size(); }
 
     /*
      * Return a string representation of a list tag
