@@ -3,6 +3,6 @@
 Block::Block(const std::string& name)
     : name(name) {}
 
-std::string Block::getName() const {
+std::string const& Block::getName() const {
     return name;
 }

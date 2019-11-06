@@ -8,7 +8,7 @@ class Block {
 public:
     Block(std::string const& name);
 
-    std::string getName() const;
+    std::string const& getName() const;
 
     void setPos(int x, int y, int z) {
         pos = {x, y, z};
