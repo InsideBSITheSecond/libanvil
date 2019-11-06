@@ -25,206 +25,212 @@
 #include <string>
 #include "byte_stream.h"
 #include "region_file.h"
+#include "Block.h"
 
 class region_file_reader : public region_file {
 private:
 
-	/*
-	 * Region file
-	 */
-	std::ifstream file;
+    /*
+     * Region file
+     */
+    std::ifstream file;
 
-	/*
-	 * Read a chunk tag from data
-	 */
-	void parse_chunk_tag(std::vector<char> &data, chunk_tag &tag);
+    /*
+     * Read a chunk tag from data
+     */
+    void parse_chunk_tag(std::vector<char> &data, chunk_tag &tag);
 
-	/*
-	 * Read a tag from data
-	 */
-	generic_tag *parse_tag(byte_stream &stream, bool is_list, char list_type);
+    /*
+     * Read a tag from data
+     */
+    generic_tag *parse_tag(byte_stream &stream, bool is_list, char list_type);
 
-	/*
-	 * Reads an array tag value from stream
-	 */
-	template <class T>
-	std::vector<T> read_array_value(byte_stream &stream) {
-		int ele_len;
-		std::vector<T> value;
+    /*
+     * Reads an array tag value from stream
+     */
+    template<class T>
+    std::vector<T> read_array_value(byte_stream &stream) {
+        int ele_len;
+        std::vector<T> value;
 
-		// check stream status
-		if(!stream.good())
-			throw std::runtime_error("Unexpected end of stream");
+        // check stream status
+        if (!stream.good())
+            throw std::runtime_error("Unexpected end of stream");
 
-		// retrieve value
-		ele_len = read_value<int>(stream);
+        // retrieve value
+        ele_len = read_value<int>(stream);
         value.reserve(ele_len);
-		for(int i = 0; i < ele_len; ++i)
-			value.push_back(read_value<T>(stream));
-		return value;
-	}
+        for (int i = 0; i < ele_len; ++i)
+            value.push_back(read_value<T>(stream));
+        return value;
+    }
 
-	/*
-	 * Reads chunk data from a file
-	 */
-	void read_chunks(void);
+    /*
+     * Reads chunk data from a file
+     */
+    void read_chunks(void);
 
-	/*
-	 * Reads header data from a file
-	 */
-	void read_header(void);
+    /*
+     * Reads header data from a file
+     */
+    void read_header(void);
 
-	/*
-	 * Reads a string tag value from stream
-	 */
-	std::string read_string_value(byte_stream &stream);
+    /*
+     * Reads a string tag value from stream
+     */
+    std::string read_string_value(byte_stream &stream);
 
-	/*
-	 * Reads all bits in range from start to end from the given buffer, eg.
-	 * val = 0b 1011 1010, start = 0, end = 5 it will return 0b 1 1010
-	 */
+    /*
+     * Reads all bits in range from start to end from the given buffer, eg.
+     * val = 0b 1011 1010, start = 0, end = 5 it will return 0b 1 1010
+     */
     uint64_t getBits(uint64_t val, unsigned int start, unsigned int end);
 
-	/*
-	 * Reads a numeric tag value from stream
-	 */
-	template <class T>
-	T read_value(byte_stream &stream) {
-		T value;
+    /*
+     * Reads a numeric tag value from stream
+     */
+    template<class T>
+    T read_value(byte_stream &stream) {
+        T value;
 
-		// check stream status
-		if(!stream.good())
-			throw std::runtime_error("Unexpected end of stream");
+        // check stream status
+        if (!stream.good())
+            throw std::runtime_error("Unexpected end of stream");
 
-		// retrieve value
-		stream >> value;
-		return value;
-	}
+        // retrieve value
+        stream >> value;
+        return value;
+    }
 
-	/*
-	 * Reads a long value from stream
-	 */
-	template <class T>
-	T read_long_value(byte_stream &stream) {
-		T value;
+    /*
+     * Reads a long value from stream
+     */
+    template<class T>
+    T read_long_value(byte_stream &stream) {
+        T value;
 
-		// check stream status
-		if(!stream.good())
-			throw std::runtime_error("Unexpected end of stream");
+        // check stream status
+        if (!stream.good())
+            throw std::runtime_error("Unexpected end of stream");
 
-		// retrieve value
-		int32_t temp; //for 32 bits at a time
+        // retrieve value
+        int32_t temp; //for 32 bits at a time
 
-		for (int i=0;i<sizeof(T)/4;i++){
+        for (int i = 0; i < sizeof(T) / 4; i++) {
 
-			temp = stream>>temp; //32 bits
-			value=(value<<32)|temp; //latch
+            temp = stream >> temp; //32 bits
+            value = (value << 32) | temp; //latch
 
-		}
-		return value;
-	}
+        }
+        return value;
+    }
+
+    std::vector<Block> get_blocks_from_subchunk(compound_tag *sectionEntry, unsigned int x, unsigned int z);
+
+    uint64_t getPaletteIndex(std::vector<int64_t> const &blockStateEntries, size_t offset, size_t bitPerIndex);
 
 public:
 
-	/*
-	 * Region file reader constructor
-	 */
-	region_file_reader(void) { return; }
+    /*
+     * Region file reader constructor
+     */
+    region_file_reader(void) { return; }
 
-	/*
-	 * Region file reader constructor
-	 */
-	region_file_reader(const std::string &path) : region_file(path) { return; }
+    /*
+     * Region file reader constructor
+     */
+    region_file_reader(const std::string &path) : region_file(path) { return; }
 
-	/*
-	 * Region file reader constructor
-	 */
-	region_file_reader(const region_file_reader &other) : region_file(other.path, other.reg) { return; }
+    /*
+     * Region file reader constructor
+     */
+    region_file_reader(const region_file_reader &other) : region_file(other.path, other.reg) { return; }
 
-	/*
-	 * Region file reader destructor
-	 */
-	virtual ~region_file_reader(void) { file.close(); }
+    /*
+     * Region file reader destructor
+     */
+    virtual ~region_file_reader(void) { file.close(); }
 
-	/*
-	 * Region file reader assignment operator
-	 */
-	region_file_reader &operator=(const region_file_reader &other);
+    /*
+     * Region file reader assignment operator
+     */
+    region_file_reader &operator=(const region_file_reader &other);
 
-	/*
-	 * Region file reader equals operator
-	 */
-	bool operator==(const region_file_reader &other);
+    /*
+     * Region file reader equals operator
+     */
+    bool operator==(const region_file_reader &other);
 
-	/*
-	 * Region file reader not-equals operator
-	 */
-	bool operator!=(const region_file_reader &other) { return !(*this == other); }
+    /*
+     * Region file reader not-equals operator
+     */
+    bool operator!=(const region_file_reader &other) { return !(*this == other); }
 
-	/*
-	 * Returns a region biome value at a given x, z & b coord
-	 */
-	char get_biome_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_z);
+    /*
+     * Returns a region biome value at a given x, z & b coord
+     */
+    char get_biome_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_z);
 
-	/*
-	 * Returns a region's biomes at a given x, z coord
-	 */
-	std::vector<char> get_biomes_at(unsigned int x, unsigned int z);
+    /*
+     * Returns a region's biomes at a given x, z coord
+     */
+    std::vector<char> get_biomes_at(unsigned int x, unsigned int z);
 
-	/*
-	 * Returns a region block value at given x, z & b coord
-	 */
-	int get_block_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_y, unsigned int b_z);
+    /*
+     * Returns a region block value at given x, z & b coord
+     */
+    int get_block_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_y, unsigned int b_z);
 
-	/*
-	 * Returns a region's blocks at a given x, z coord
-	 */
-	std::vector<int> get_blocks_at(unsigned int x, unsigned int z);
+    /*
+     * Returns a region's blocks at a given x, z coord
+     */
+    std::vector<Block> get_blocks_at(unsigned int x, unsigned int z);
 
-	/*
-	 * Returns a region's chunk tag at a given x, z coord
-	 */
-	chunk_tag &get_chunk_tag_at(unsigned int x, unsigned int z);
 
-	/*
-	 * Returns a region height value at a given x, z & b coord
-	 */
-	int get_height_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_z);
+    /*
+     * Returns a region's chunk tag at a given x, z coord
+     */
+    chunk_tag &get_chunk_tag_at(unsigned int x, unsigned int z);
 
-	/*
-	 * Returns a region's height map at a given x, z coord
-	 */
-	std::vector<int> get_heightmap_at(unsigned int x, unsigned int z);
+    /*
+     * Returns a region height value at a given x, z & b coord
+     */
+    int get_height_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_z);
 
-	/*
-	 * Returns a region file reader's file
-	 */
-	std::ifstream &get_file(void) { return file; }
+    /*
+     * Returns a region's height map at a given x, z coord
+     */
+    std::vector<int> get_heightmap_at(unsigned int x, unsigned int z);
 
-	/*
-	 * Return a region's x coordinate
-	 */
-	int get_x_coord(void) { return get_region().get_x(); }
+    /*
+     * Returns a region file reader's file
+     */
+    std::ifstream &get_file(void) { return file; }
 
-	/*
-	 * Return a region's z coordinate
-	 */
-	int get_z_coord(void) { return get_region().get_z(); }
+    /*
+     * Return a region's x coordinate
+     */
+    int get_x_coord(void) { return get_region().get_x(); }
 
-	/*
-	 * Return a region's filled status
-	 */
-	bool is_filled(unsigned int x, unsigned int z);
+    /*
+     * Return a region's z coordinate
+     */
+    int get_z_coord(void) { return get_region().get_z(); }
 
-	/*
-	 * Reads a file into region_file
-	 */
-	void read(void);
+    /*
+     * Return a region's filled status
+     */
+    bool is_filled(unsigned int x, unsigned int z);
 
-	/*
-	 * Returns a string representation of a region file reader
-	 */
-	std::string to_string(void) { return region_file::to_string(); }
+    /*
+     * Reads a file into region_file
+     */
+    void read(void);
+
+    /*
+     * Returns a string representation of a region file reader
+     */
+    std::string to_string(void) { return region_file::to_string(); }
 };
 
 #endif // REGION_FILE_READER_H_
