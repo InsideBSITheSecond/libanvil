@@ -23,52 +23,55 @@
 /*
  * Chunk info assignment operator
  */
-chunk_info &chunk_info::operator=(const chunk_info &other) {
+chunk_info& chunk_info::operator=(const chunk_info& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	length = other.length;
-	modified = other.modified;
-	offset = other.offset;
-	type = other.type;
-	return *this;
+    // assign attributes
+    length = other.length;
+    modified = other.modified;
+    offset = other.offset;
+    type = other.type;
+    return *this;
 }
 
 /*
  * Chunk info equals operator
  */
-bool chunk_info::operator==(const chunk_info &other) {
+bool chunk_info::operator==(const chunk_info& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// check attributes
-	return length == other.length
-			&& modified == other.modified
-			&& offset == other.offset
-			&& type == other.type;
+    // check attributes
+    return length == other.length
+           && modified == other.modified
+           && offset == other.offset
+           && type == other.type;
 }
 
 /*
  * Returns a string representation of a chunk
  */
 std::string chunk_info::to_string(void) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	ss << "[";
-	switch(type) {
-		case GZIP: ss << "GZIP";
-			break;
-		case ZLIB: ss << "ZLIB";
-			break;
-		default: ss << "UNKNOWN";
-			break;
-	}
-	ss << "] off: " << offset << ", len: " << length << ", modified: " << modified;
-	return ss.str();
+    // form string representation
+    ss << "[";
+    switch (type) {
+        case GZIP:
+            ss << "GZIP";
+            break;
+        case ZLIB:
+            ss << "ZLIB";
+            break;
+        default:
+            ss << "UNKNOWN";
+            break;
+    }
+    ss << "] off: " << offset << ", len: " << length << ", modified: " << modified;
+    return ss.str();
 }

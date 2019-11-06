@@ -27,87 +27,87 @@
 class int_tag : public generic_tag {
 private:
 
-	/*
-	 * Integer tag value
-	 */
-	int value;
+    /*
+     * Integer tag value
+     */
+    int value;
 
 public:
 
-	/*
-	 * Integer tag constructor
-	 */
-	int_tag(void) : generic_tag(INT) { value = 0; }
+    /*
+     * Integer tag constructor
+     */
+    int_tag(void) : generic_tag(INT) { value = 0; }
 
-	/*
-	 * Integer tag constructor
-	 */
-	int_tag(const int_tag &other) : generic_tag(other.name, INT) { value = other.value; };
+    /*
+     * Integer tag constructor
+     */
+    int_tag(const int_tag& other) : generic_tag(other.name, INT) { value = other.value; };
 
-	/*
-	 * Integer tag constructor
-	 */
-	int_tag(const std::string &name) : generic_tag(name, INT) { value = 0; }
+    /*
+     * Integer tag constructor
+     */
+    int_tag(const std::string& name) : generic_tag(name, INT) { value = 0; }
 
-	/*
-	 * Integer tag constructor
-	 */
-	int_tag(int value) : generic_tag(INT) { this->value = value; }
+    /*
+     * Integer tag constructor
+     */
+    int_tag(int value) : generic_tag(INT) { this->value = value; }
 
-	/*
-	 * Integer tag constructor
-	 */
-	int_tag(const std::string &name, int value) : generic_tag(name, INT) { this->value = value; }
+    /*
+     * Integer tag constructor
+     */
+    int_tag(const std::string& name, int value) : generic_tag(name, INT) { this->value = value; }
 
-	/*
-	 * Integer tag destructor
-	 */
-	virtual ~int_tag(void) { return; }
+    /*
+     * Integer tag destructor
+     */
+    virtual ~int_tag(void) { return; }
 
-	/*
-	 * Integer tag assignment operator
-	 */
-	int_tag &operator=(const int_tag &other);
+    /*
+     * Integer tag assignment operator
+     */
+    int_tag& operator=(const int_tag& other);
 
-	/*
-	 * Integer tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Integer tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Integer tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Integer tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Get a int tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Get a int tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a int tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a int tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a int tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a int tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a integer tag's value
-	 */
-	int get_value(void) { return value; }
+    /*
+     * Return a integer tag's value
+     */
+    int get_value(void) { return value; }
 
-	/*
-	 * Set a integer tag's value
-	 */
-	void set_value(int value) { this->value = value; }
+    /*
+     * Set a integer tag's value
+     */
+    void set_value(int value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a integer tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a integer tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // INT_TAG_H_

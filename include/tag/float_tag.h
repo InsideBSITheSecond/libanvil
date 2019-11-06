@@ -27,87 +27,87 @@
 class float_tag : public generic_tag {
 private:
 
-	/*
-	 * Float tag value
-	 */
-	float value;
+    /*
+     * Float tag value
+     */
+    float value;
 
 public:
 
-	/*
-	 * Float tag constructor
-	 */
-	float_tag(void) : generic_tag(FLOAT) { value = 0; }
+    /*
+     * Float tag constructor
+     */
+    float_tag(void) : generic_tag(FLOAT) { value = 0; }
 
-	/*
-	 * Float tag constructor
-	 */
-	float_tag(const float_tag &other) : generic_tag(other.name, FLOAT) { value = other.value; };
+    /*
+     * Float tag constructor
+     */
+    float_tag(const float_tag& other) : generic_tag(other.name, FLOAT) { value = other.value; };
 
-	/*
-	 * Float tag constructor
-	 */
-	float_tag(const std::string &name) : generic_tag(name, FLOAT) { value = 0; }
+    /*
+     * Float tag constructor
+     */
+    float_tag(const std::string& name) : generic_tag(name, FLOAT) { value = 0; }
 
-	/*
-	 * Float tag constructor
-	 */
-	float_tag(float value) : generic_tag(FLOAT) { this->value = value; }
+    /*
+     * Float tag constructor
+     */
+    float_tag(float value) : generic_tag(FLOAT) { this->value = value; }
 
-	/*
-	 * Float tag constructor
-	 */
-	float_tag(const std::string &name, float value) : generic_tag(name, FLOAT) { this->value = value; }
+    /*
+     * Float tag constructor
+     */
+    float_tag(const std::string& name, float value) : generic_tag(name, FLOAT) { this->value = value; }
 
-	/*
-	 * Float tag destructor
-	 */
-	virtual ~float_tag(void) { return; }
+    /*
+     * Float tag destructor
+     */
+    virtual ~float_tag(void) { return; }
 
-	/*
-	 * Float tag assignment operator
-	 */
-	float_tag &operator=(const float_tag &other);
+    /*
+     * Float tag assignment operator
+     */
+    float_tag& operator=(const float_tag& other);
 
-	/*
-	 * Float tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Float tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Float tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Float tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Return a float tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Return a float tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a float tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a float tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a float tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a float tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a float tag's value
-	 */
-	float get_value(void) { return value; }
+    /*
+     * Return a float tag's value
+     */
+    float get_value(void) { return value; }
 
-	/*
-	 * Set a float tag's value
-	 */
-	void set_value(float value) { this->value = value; }
+    /*
+     * Set a float tag's value
+     */
+    void set_value(float value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a float tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a float tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // FLOAT_TAG_H_

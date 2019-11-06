@@ -27,82 +27,82 @@
 class string_tag : public generic_tag {
 private:
 
-	/*
-	 * String tag value
-	 */
-	std::string value;
+    /*
+     * String tag value
+     */
+    std::string value;
 
 public:
 
-	/*
-	 * String tag constructor
-	 */
-	string_tag(void) : generic_tag(STRING) { return; }
+    /*
+     * String tag constructor
+     */
+    string_tag(void) : generic_tag(STRING) { return; }
 
-	/*
-	 * String tag constructor
-	 */
-	string_tag(const string_tag &other) : generic_tag(other.name, STRING) { value = other.value; };
+    /*
+     * String tag constructor
+     */
+    string_tag(const string_tag& other) : generic_tag(other.name, STRING) { value = other.value; };
 
-	/*
-	 * String tag constructor
-	 */
-	string_tag(const std::string &value) : generic_tag(STRING) { this->value = value; }
+    /*
+     * String tag constructor
+     */
+    string_tag(const std::string& value) : generic_tag(STRING) { this->value = value; }
 
-	/*
-	 * String tag constructor
-	 */
-	string_tag(const std::string &name, const std::string &value) : generic_tag(name, STRING) { this->value = value; }
+    /*
+     * String tag constructor
+     */
+    string_tag(const std::string& name, const std::string& value) : generic_tag(name, STRING) { this->value = value; }
 
-	/*
-	 * String tag destructor
-	 */
-	virtual ~string_tag(void) { return; }
+    /*
+     * String tag destructor
+     */
+    virtual ~string_tag(void) { return; }
 
-	/*
-	 * String tag assignment operator
-	 */
-	string_tag &operator=(const string_tag &other);
+    /*
+     * String tag assignment operator
+     */
+    string_tag& operator=(const string_tag& other);
 
-	/*
-	 * String tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * String tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * String tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * String tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Get a string tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Get a string tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a string tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a string tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a string tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a string tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a string tag's value
-	 */
-	std::string &get_value(void) { return value; }
+    /*
+     * Return a string tag's value
+     */
+    std::string& get_value(void) { return value; }
 
-	/*
-	 * Set a string tag's value
-	 */
-	void set_value(std::string &value) { this->value = value; }
+    /*
+     * Set a string tag's value
+     */
+    void set_value(std::string& value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a string tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a string tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // STRING_TAG_H_

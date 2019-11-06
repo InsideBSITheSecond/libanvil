@@ -25,20 +25,20 @@
 class compression {
 public:
 
-	/*
-	 * Zlib segment size
-	 */
-	static const unsigned int SEG_SIZE = 16384;
+    /*
+     * Zlib segment size
+     */
+    static const unsigned int SEG_SIZE = 16384;
 
-	/*
-	 * Deflate a char buffer
-	 */
-	static bool deflate_(std::vector<char> &data);
+    /*
+     * Deflate a char buffer
+     */
+    static bool deflate_(std::vector<char>& data);
 
-	/*
-	 * Inflate a char buffer
-	 */
-	static bool inflate_(std::vector<char> &data);
+    /*
+     * Inflate a char buffer
+     */
+    static bool inflate_(std::vector<char>& data);
 };
 
 #endif // COMPRESSION_H_

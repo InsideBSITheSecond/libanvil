@@ -28,73 +28,74 @@ const std::regex region_file::PATTERN = std::regex("r\\.([-]?[0-9]+)\\.([-]?[0-9
 /*
  * Region file assignment operator
  */
-region_file &region_file::operator=(const region_file &other) {
+region_file& region_file::operator=(const region_file& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	path = other.path;
-	reg = other.reg;
-	return *this;
+    // assign attributes
+    path = other.path;
+    reg = other.reg;
+    return *this;
 }
 
 /*
  * Region file equals operator
  */
-bool region_file::operator==(const region_file &other) {
+bool region_file::operator==(const region_file& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// check attributes
-	return path == other.path
-			&& reg == other.reg;
+    // check attributes
+    return path == other.path
+           && reg == other.reg;
 }
 
 /*
  * Convert between endian types
  */
-void region_file::convert_endian(std::vector<char> &data) {
-	std::vector<char> rev;
-	rev.resize(data.size());
+void region_file::convert_endian(std::vector<char>& data) {
+    std::vector<char> rev;
+    rev.resize(data.size());
 
-	// reverse the order of elements
-	for(unsigned int i = 0; i < data.size(); ++i)
-		rev.at(rev.size() - i) = data.at(i);
-	data = rev;
+    // reverse the order of elements
+    for (unsigned int i = 0; i < data.size(); ++i) {
+        rev.at(rev.size() - i) = data.at(i);
+    }
+    data = rev;
 }
 
 /*
  * Returns true if a specified path is a region file
  */
-bool region_file::is_region_file(const std::string &path, int &x, int &z) {
+bool region_file::is_region_file(const std::string& path, int& x, int& z) {
 
-	// parse the filename for coordinants
-	std::cmatch ref;
-	std::stringstream stream;
-	std::string name = path.substr(path.find_last_of('/') + 1);
-	if(!std::regex_match(name.c_str(), ref, PATTERN))
-		return false;
-	stream << ref[1];
-	stream >> x;
-	stream.clear();
-	stream << ref[2];
-	stream >> z;
-	return true;
+    // parse the filename for coordinants
+    std::cmatch ref;
+    std::stringstream stream;
+    std::string name = path.substr(path.find_last_of('/') + 1);
+    if (!std::regex_match(name.c_str(), ref, PATTERN))
+        return false;
+    stream << ref[1];
+    stream >> x;
+    stream.clear();
+    stream << ref[2];
+    stream >> z;
+    return true;
 }
 
 /*
  * Returns a string representation of a region file
  */
 std::string region_file::to_string(void) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	if(!path.empty())
-		ss << "Path: " << path << std::endl;
-	ss << reg.to_string();
-	return ss.str();
+    // form string representation
+    if (!path.empty())
+        ss << "Path: " << path << std::endl;
+    ss << reg.to_string();
+    return ss.str();
 }

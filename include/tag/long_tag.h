@@ -27,87 +27,87 @@
 class long_tag : public generic_tag {
 private:
 
-	/*
-	 * Long tag value
-	 */
-	int64_t value;
+    /*
+     * Long tag value
+     */
+    int64_t value;
 
 public:
 
-	/*
-	 * Long tag constructor
-	 */
-	long_tag(void) : generic_tag(LONG) { value = 0; }
+    /*
+     * Long tag constructor
+     */
+    long_tag(void) : generic_tag(LONG) { value = 0; }
 
-	/*
-	 * Long tag constructor
-	 */
-	long_tag(const long_tag &other) : generic_tag(other.name, LONG) { value = other.value; };
+    /*
+     * Long tag constructor
+     */
+    long_tag(const long_tag& other) : generic_tag(other.name, LONG) { value = other.value; };
 
-	/*
-	 * Long tag constructor
-	 */
-	long_tag(const std::string &name) : generic_tag(name, LONG) { value = 0; }
+    /*
+     * Long tag constructor
+     */
+    long_tag(const std::string& name) : generic_tag(name, LONG) { value = 0; }
 
-	/*
-	 * Long tag constructor
-	 */
-	long_tag(int64_t value) : generic_tag(LONG) { this->value = value; }
+    /*
+     * Long tag constructor
+     */
+    long_tag(int64_t value) : generic_tag(LONG) { this->value = value; }
 
-	/*
-	 * Long tag constructor
-	 */
-	long_tag(const std::string &name, int64_t value) : generic_tag(name, LONG) { this->value = value; }
+    /*
+     * Long tag constructor
+     */
+    long_tag(const std::string& name, int64_t value) : generic_tag(name, LONG) { this->value = value; }
 
-	/*
-	 * Long tag destructor
-	 */
-	virtual ~long_tag(void) { return; }
+    /*
+     * Long tag destructor
+     */
+    virtual ~long_tag(void) { return; }
 
-	/*
-	 * Long tag assignment operator
-	 */
-	long_tag &operator=(const long_tag &other);
+    /*
+     * Long tag assignment operator
+     */
+    long_tag& operator=(const long_tag& other);
 
-	/*
-	 * Long tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Long tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Long tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Long tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Get a long tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Get a long tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a long tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a long tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a long tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a long tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a long tag's value
-	 */
-	int64_t get_value(void) { return value; }
+    /*
+     * Return a long tag's value
+     */
+    int64_t get_value(void) { return value; }
 
-	/*
-	 * Set a long tag's value
-	 */
-	void set_value(int64_t value) { this->value = value; }
+    /*
+     * Set a long tag's value
+     */
+    void set_value(int64_t value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a long tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a long tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif

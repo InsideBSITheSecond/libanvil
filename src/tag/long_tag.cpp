@@ -24,90 +24,90 @@
 /*
  * Long tag assignment operator
  */
-long_tag &long_tag::operator=(const long_tag &other) {
+long_tag& long_tag::operator=(const long_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	name = other.name;
-	type = other.type;
-	value = other.value;
-	return *this;
+    // assign attributes
+    name = other.name;
+    type = other.type;
+    value = other.value;
+    return *this;
 }
 
 /*
  * Long tag equals operator
  */
-bool long_tag::operator==(const generic_tag &other) {
+bool long_tag::operator==(const generic_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// convert into same type
-	const long_tag *other_tag = dynamic_cast<const long_tag *>(&other);
-	if(!other_tag)
-		return false;
+    // convert into same type
+    const long_tag* other_tag = dynamic_cast<const long_tag*>(&other);
+    if (!other_tag)
+        return false;
 
-	// check attributes
-	return name == other.name
-			&& type == other.type
-			&& value == other_tag->value;
+    // check attributes
+    return name == other.name
+           && type == other.type
+           && value == other_tag->value;
 }
 
 /*
  * Return a long tag's data
  */
-std::vector<char> long_tag::get_data(bool list_ele)  {
-	byte_stream stream(byte_stream::SWAP_ENDIAN);
+std::vector<char> long_tag::get_data(bool list_ele) {
+    byte_stream stream(byte_stream::SWAP_ENDIAN);
 
-	get_data(list_ele, stream);
+    get_data(list_ele, stream);
 
-	return stream.vbuf();
+    return stream.vbuf();
 }
 
 /*
  * Save a long tag's data to a stream
  */
-void long_tag::get_data(bool list_ele, byte_stream& stream)  {
-	// form data representation
-	if(!list_ele) {
-		stream << (char) type;
-		stream << (short) name.size();
-		stream << name;
-	}
-	int32_t temp; //get 4 bit pieces
-	
-	temp = value>>32; //top 32 bits
-	stream << temp; //top 32 bits in
+void long_tag::get_data(bool list_ele, byte_stream& stream) {
+    // form data representation
+    if (!list_ele) {
+        stream << (char) type;
+        stream << (short) name.size();
+        stream << name;
+    }
+    int32_t temp; //get 4 bit pieces
 
-	temp = value; //should truncate, lower 32 bits
-	stream << temp; //lower 32 bits in
+    temp = value >> 32; //top 32 bits
+    stream << temp; //top 32 bits in
+
+    temp = value; //should truncate, lower 32 bits
+    stream << temp; //lower 32 bits in
 }
 
 /*
  * Return a long tag's data size, equivalent to get_data().size(), but faster.
  */
-unsigned int long_tag::get_data_size(bool list_ele){
-	unsigned int total = 0; //nothing yet
+unsigned int long_tag::get_data_size(bool list_ele) {
+    unsigned int total = 0; //nothing yet
 
-	if (!list_ele){
-		total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
-	}
+    if (!list_ele) {
+        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+    }
 
-	total += 8; //8 bytes in a long
-	return total;
+    total += 8; //8 bytes in a long
+    return total;
 }
 
 /*
  * Return a string representation of a long tag
  */
 std::string long_tag::to_string(unsigned int tab) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	ss << generic_tag::to_string(tab) << ": " << value;
-	return ss.str();
+    // form string representation
+    ss << generic_tag::to_string(tab) << ": " << value;
+    return ss.str();
 }

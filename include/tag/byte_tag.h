@@ -27,87 +27,87 @@
 class byte_tag : public generic_tag {
 private:
 
-	/*
-	 * Byte tag value
-	 */
-	char value;
+    /*
+     * Byte tag value
+     */
+    char value;
 
 public:
 
-	/*
-	 * Byte tag constructor
-	 */
-	byte_tag(void) : generic_tag(BYTE) { value = 0; }
+    /*
+     * Byte tag constructor
+     */
+    byte_tag(void) : generic_tag(BYTE) { value = 0; }
 
-	/*
-	 * Byte tag constructor
-	 */
-	byte_tag(const byte_tag &other) : generic_tag(other.name, BYTE) { value = other.value; };
+    /*
+     * Byte tag constructor
+     */
+    byte_tag(const byte_tag& other) : generic_tag(other.name, BYTE) { value = other.value; };
 
-	/*
-	 * Byte tag constructor
-	 */
-	byte_tag(const std::string &name) : generic_tag(name, BYTE) { value = 0; }
+    /*
+     * Byte tag constructor
+     */
+    byte_tag(const std::string& name) : generic_tag(name, BYTE) { value = 0; }
 
-	/*
-	 * Byte tag constructor
-	 */
-	byte_tag(char value) : generic_tag(BYTE) { this->value = value; }
+    /*
+     * Byte tag constructor
+     */
+    byte_tag(char value) : generic_tag(BYTE) { this->value = value; }
 
-	/*
-	 * Byte tag constructor
-	 */
-	byte_tag(const std::string &name, char value) : generic_tag(name, BYTE) { this->value = value; }
+    /*
+     * Byte tag constructor
+     */
+    byte_tag(const std::string& name, char value) : generic_tag(name, BYTE) { this->value = value; }
 
-	/*
-	 * Byte tag destructor
-	 */
-	virtual ~byte_tag(void) { return; }
+    /*
+     * Byte tag destructor
+     */
+    virtual ~byte_tag(void) { return; }
 
-	/*
-	 * Byte tag assignment operator
-	 */
-	byte_tag &operator=(const byte_tag &other);
+    /*
+     * Byte tag assignment operator
+     */
+    byte_tag& operator=(const byte_tag& other);
 
-	/*
-	 * Byte tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Byte tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Byte tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Byte tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Get a byte tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Get a byte tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a byte tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a byte tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a byte tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a byte tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a byte tag's value
-	 */
-	char get_value(void) { return value; }
+    /*
+     * Return a byte tag's value
+     */
+    char get_value(void) { return value; }
 
-	/*
-	 * Set a byte tag's value
-	 */
-	void set_value(char value) { this->value = value; }
+    /*
+     * Set a byte tag's value
+     */
+    void set_value(char value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a byte tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a byte tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // BYTE_TAG_H_

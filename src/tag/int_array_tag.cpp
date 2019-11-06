@@ -24,82 +24,84 @@
 /*
  * Integer array tag assignment operator
  */
-int_array_tag &int_array_tag::operator=(const int_array_tag &other) {
+int_array_tag& int_array_tag::operator=(const int_array_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	name = other.name;
-	type = other.type;
-	value = other.value;
-	return *this;
+    // assign attributes
+    name = other.name;
+    type = other.type;
+    value = other.value;
+    return *this;
 }
 
 /*
  * Integer array tag equals operator
  */
-bool int_array_tag::operator==(const generic_tag &other) {
+bool int_array_tag::operator==(const generic_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// convert into same type
-	const int_array_tag *other_tag = dynamic_cast<const int_array_tag *>(&other);
-	if(!other_tag)
-		return false;
+    // convert into same type
+    const int_array_tag* other_tag = dynamic_cast<const int_array_tag*>(&other);
+    if (!other_tag)
+        return false;
 
-	// check attributes
-	if(name != other.name
-			|| type != other.type
-			|| value.size() != other_tag->value.size())
-		return false;
-	for(unsigned int i = 0; i < value.size(); ++i)
-		if(value.at(i) != other_tag->value.at(i))
-			return false;
-	return true;
+    // check attributes
+    if (name != other.name
+        || type != other.type
+        || value.size() != other_tag->value.size())
+        return false;
+    for (unsigned int i = 0; i < value.size(); ++i) {
+        if (value.at(i) != other_tag->value.at(i))
+            return false;
+    }
+    return true;
 }
 
 /*
  * Return a integer array tag's data
  */
-std::vector<char> int_array_tag::get_data(bool list_ele)  {
-	byte_stream stream(byte_stream::SWAP_ENDIAN);
+std::vector<char> int_array_tag::get_data(bool list_ele) {
+    byte_stream stream(byte_stream::SWAP_ENDIAN);
 
-	get_data(list_ele, stream);
+    get_data(list_ele, stream);
 
-	return stream.vbuf();
+    return stream.vbuf();
 }
 
 /*
  * Save a int array tag's data to a stream
  */
-void int_array_tag::get_data(bool list_ele, byte_stream& stream)  {
-	// form data representation
-	if(!list_ele) {
-		stream << (char) type;
-		stream << (short) name.size();
-		stream << name;
-	}
-	stream << (int) value.size();
-	for(unsigned int i = 0; i < value.size(); ++i)
-		stream << value.at(i);
+void int_array_tag::get_data(bool list_ele, byte_stream& stream) {
+    // form data representation
+    if (!list_ele) {
+        stream << (char) type;
+        stream << (short) name.size();
+        stream << name;
+    }
+    stream << (int) value.size();
+    for (unsigned int i = 0; i < value.size(); ++i) {
+        stream << value.at(i);
+    }
 }
 
 /*
  * Return a int array tag's data size, equivalent to get_data().size(), but faster.
  */
-unsigned int int_array_tag::get_data_size(bool list_ele){
-	unsigned int total = 0; //nothing yet
+unsigned int int_array_tag::get_data_size(bool list_ele) {
+    unsigned int total = 0; //nothing yet
 
-	if (!list_ele){
-		total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
-	}
-	total+=4; //array size,  int = 4 bytes
-	total+=value.size()*4; //4 bytes in an int, this many ints
-	return total;
+    if (!list_ele) {
+        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+    }
+    total += 4; //array size,  int = 4 bytes
+    total += value.size() * 4; //4 bytes in an int, this many ints
+    return total;
 }
 
 
@@ -107,13 +109,14 @@ unsigned int int_array_tag::get_data_size(bool list_ele){
  * Return a string representation of a integer array tag
  */
 std::string int_array_tag::to_string(unsigned int tab) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	ss << generic_tag::to_string(tab) << " (" << value.size() << ") { ";
-	if(!value.empty())
-		for(unsigned int i = 0; i < value.size(); ++i)
-			ss << value.at(i) << ", ";
-	ss << "}";
-	return ss.str();
+    // form string representation
+    ss << generic_tag::to_string(tab) << " (" << value.size() << ") { ";
+    if (!value.empty())
+        for (unsigned int i = 0; i < value.size(); ++i) {
+            ss << value.at(i) << ", ";
+        }
+    ss << "}";
+    return ss.str();
 }

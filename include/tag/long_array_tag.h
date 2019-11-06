@@ -30,108 +30,108 @@
 class long_array_tag : public generic_tag {
 private:
 
-	/*
-	 * Long array tag value
-	 */
-	std::vector<int64_t> value;
+    /*
+     * Long array tag value
+     */
+    std::vector<int64_t> value;
 
 public:
 
-	/*
-	 * Long array tag constructor
-	 */
-	long_array_tag(void) : generic_tag(LONG_ARRAY) { return; }
+    /*
+     * Long array tag constructor
+     */
+    long_array_tag(void) : generic_tag(LONG_ARRAY) { return; }
 
-	/*
-	 * Long array tag constructor
-	 */
-	long_array_tag(const long_array_tag &other) : generic_tag(other.name, LONG_ARRAY) { value = other.value; };
+    /*
+     * Long array tag constructor
+     */
+    long_array_tag(const long_array_tag& other) : generic_tag(other.name, LONG_ARRAY) { value = other.value; };
 
-	/*
-	 * Integer array tag constructor
-	 */
-	long_array_tag(const std::string &name) : generic_tag(name, LONG_ARRAY) { return; }
+    /*
+     * Integer array tag constructor
+     */
+    long_array_tag(const std::string& name) : generic_tag(name, LONG_ARRAY) { return; }
 
-	/*
-	 * Long array tag constructor
-	 */
-	long_array_tag(std::vector<int64_t> value) : generic_tag(LONG_ARRAY) { this->value = value; }
+    /*
+     * Long array tag constructor
+     */
+    long_array_tag(std::vector<int64_t> value) : generic_tag(LONG_ARRAY) { this->value = value; }
 
-	/*
-	 * Long array tag constructor
-	 */
-	long_array_tag(const std::string &name, std::vector<int64_t> value) : generic_tag(name,
-																				   LONG_ARRAY) { this->value = value; }
+    /*
+     * Long array tag constructor
+     */
+    long_array_tag(const std::string& name, std::vector<int64_t> value) : generic_tag(name,
+                                                                                      LONG_ARRAY) { this->value = value; }
 
-	/*
-	 * Long array tag destructor
-	 */
-	virtual ~long_array_tag(void) { return; }
+    /*
+     * Long array tag destructor
+     */
+    virtual ~long_array_tag(void) { return; }
 
-	/*
-	 * Long array tag assignment operator
-	 */
-	long_array_tag &operator=(const long_array_tag &other);
+    /*
+     * Long array tag assignment operator
+     */
+    long_array_tag& operator=(const long_array_tag& other);
 
-	/*
-	 * Integer array tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Integer array tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Integer array tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Integer array tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Returns a long array tag integer at a given index
-	 */
-	int64_t &at(unsigned int index) { return value.at(index); }
+    /*
+     * Returns a long array tag integer at a given index
+     */
+    int64_t& at(unsigned int index) { return value.at(index); }
 
-	/*
-	 * Returns a long array tag's empty status
-	 */
-	bool empty(void) { return value.empty(); }
+    /*
+     * Returns a long array tag's empty status
+     */
+    bool empty(void) { return value.empty(); }
 
-	/*
-	 * Erase a integer in a integer array tag at a given index
-	 */
-	void erase(unsigned int index) { value.erase(value.begin() + index); }
+    /*
+     * Erase a integer in a integer array tag at a given index
+     */
+    void erase(unsigned int index) { value.erase(value.begin() + index); }
 
-	/*
-	 * Return a integer array tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Return a integer array tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Return a integer array tag's value
-	 */
-	std::vector<int64_t> &get_value(void) { return value; }
+    /*
+     * Return a integer array tag's value
+     */
+    std::vector<int64_t>& get_value(void) { return value; }
 
-	/*
-	 * Insert a integer into a integer array tag at a given index
-	 */
-	void insert(int64_t value, unsigned int index) { this->value.insert(this->value.begin() + index, value); }
+    /*
+     * Insert a integer into a integer array tag at a given index
+     */
+    void insert(int64_t value, unsigned int index) { this->value.insert(this->value.begin() + index, value); }
 
-	/*
-	 * Insert a integer onto the tail of a integer array tag
-	 */
-	void push_back(int64_t value) { this->value.push_back(value); }
+    /*
+     * Insert a integer onto the tail of a integer array tag
+     */
+    void push_back(int64_t value) { this->value.push_back(value); }
 
-	/*
-	 * Set a integer array tag's value
-	 */
-	void set_value(std::vector<int64_t> &value) { this->value = value; }
+    /*
+     * Set a integer array tag's value
+     */
+    void set_value(std::vector<int64_t>& value) { this->value = value; }
 
-	/*
-	 * Returns a long array tag value's size
-	 */
-	unsigned int size(void) { return value.size(); }
+    /*
+     * Returns a long array tag value's size
+     */
+    unsigned int size(void) { return value.size(); }
 
-	/*
-	 * Return a string representation of a long array tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a long array tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // LONG_ARRAY_TAG_H_

@@ -23,40 +23,40 @@
 class region_dim {
 public:
 
-	/*
-	 * Maximum number of surface blocks per chunk
-	 */
-	static const unsigned int BLOCK_COUNT = 256;
+    /*
+     * Maximum number of surface blocks per chunk
+     */
+    static const unsigned int BLOCK_COUNT = 256;
 
-	/*
-	 * Block width of a chunk
-	 */
-	static const unsigned int BLOCK_WIDTH = 16;
+    /*
+     * Block width of a chunk
+     */
+    static const unsigned int BLOCK_WIDTH = 16;
 
-	/*
-	 * Block height of a chunk
-	 */
-	static const unsigned int BLOCK_HEIGHT = 256;
+    /*
+     * Block height of a chunk
+     */
+    static const unsigned int BLOCK_HEIGHT = 256;
 
-	/*
-	 * Maximum number of chunks in region
-	 */
-	static const unsigned int CHUNK_COUNT = 1024;
+    /*
+     * Maximum number of chunks in region
+     */
+    static const unsigned int CHUNK_COUNT = 1024;
 
-	/*
-	 * Chunk width of a region
-	 */
-	static const unsigned int CHUNK_WIDTH = 32;
+    /*
+     * Chunk width of a region
+     */
+    static const unsigned int CHUNK_WIDTH = 32;
 
-	/*
-	 * Region file header offset
-	 */
-	static const unsigned int HEADER_OFFSET = 8192;
+    /*
+     * Region file header offset
+     */
+    static const unsigned int HEADER_OFFSET = 8192;
 
-	/*
-	 * Region file sector size
-	 */
-	static const unsigned int SECTOR_SIZE = 4096;
+    /*
+     * Region file sector size
+     */
+    static const unsigned int SECTOR_SIZE = 4096;
 };
 
 #endif // REGION_DIM_H_

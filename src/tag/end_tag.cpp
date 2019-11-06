@@ -22,54 +22,54 @@
 /*
  * End tag assignment operator
  */
-end_tag &end_tag::operator=(const end_tag &other) {
+end_tag& end_tag::operator=(const end_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	name = other.name;
-	type = other.type;
-	return *this;
+    // assign attributes
+    name = other.name;
+    type = other.type;
+    return *this;
 }
 
 /*
  * End tag equals operator
  */
-bool end_tag::operator==(const generic_tag &other) {
+bool end_tag::operator==(const generic_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// convert into same type
-	const end_tag *other_tag = dynamic_cast<const end_tag *>(&other);
-	if(!other_tag)
-		return false;
+    // convert into same type
+    const end_tag* other_tag = dynamic_cast<const end_tag*>(&other);
+    if (!other_tag)
+        return false;
 
-	// check attributes
-	return name == other.name
-			&& type == other.type;
+    // check attributes
+    return name == other.name
+           && type == other.type;
 }
 
 /*
  * Return a end tag's data
  */
-std::vector<char> end_tag::get_data(bool list_ele)  {
-	std::vector<char> data;
+std::vector<char> end_tag::get_data(bool list_ele) {
+    std::vector<char> data;
 
-	// form data representation
-	data.insert(data.end(), 0);
-	return data;
+    // form data representation
+    data.insert(data.end(), 0);
+    return data;
 }
 
 /*
  * Save a end tag's data to a stream
  */
-void end_tag::get_data(bool list_ele, byte_stream& stream)  {
+void end_tag::get_data(bool list_ele, byte_stream& stream) {
 
-	stream<<get_data(list_ele);
+    stream << get_data(list_ele);
 
 }
 
@@ -77,6 +77,6 @@ void end_tag::get_data(bool list_ele, byte_stream& stream)  {
 /*
  * Return a end tag's data size, equivalent to get_data().size(), but faster.
  */
-unsigned int end_tag::get_data_size(bool list_ele){
-	return 1; //just a char
+unsigned int end_tag::get_data_size(bool list_ele) {
+    return 1; //just a char
 }

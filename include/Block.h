@@ -5,7 +5,7 @@
 class Block {
 
 public:
-    Block(std::string const &name);
+    Block(std::string const& name);
 
     std::string getName() const;
 

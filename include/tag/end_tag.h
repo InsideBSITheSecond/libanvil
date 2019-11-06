@@ -27,55 +27,55 @@
 class end_tag : public generic_tag {
 public:
 
-	/*
-	 * End tag constructor
-	 */
-	end_tag(void) : generic_tag(END) { return; }
+    /*
+     * End tag constructor
+     */
+    end_tag(void) : generic_tag(END) { return; }
 
-	/*
-	 * End tag constructor
-	 */
-	end_tag(const end_tag &other) : generic_tag(other.name, END) { return; };
+    /*
+     * End tag constructor
+     */
+    end_tag(const end_tag& other) : generic_tag(other.name, END) { return; };
 
-	/*
-	 * End tag destructor
-	 */
-	virtual ~end_tag(void) { return; }
+    /*
+     * End tag destructor
+     */
+    virtual ~end_tag(void) { return; }
 
-	/*
-	 * End tag assignment operator
-	 */
-	end_tag &operator=(const end_tag &other);
+    /*
+     * End tag assignment operator
+     */
+    end_tag& operator=(const end_tag& other);
 
-	/*
-	 * End tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * End tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * End tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * End tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Return a end tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Return a end tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a end tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a end tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a end tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	virtual unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a end tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    virtual unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a string representation of a end tag
-	 */
-	std::string to_string(unsigned int tab) { return generic_tag::to_string(tab); }
+    /*
+     * Return a string representation of a end tag
+     */
+    std::string to_string(unsigned int tab) { return generic_tag::to_string(tab); }
 };
 
 #endif // END_TAG_H_

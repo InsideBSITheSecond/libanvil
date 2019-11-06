@@ -42,17 +42,17 @@ public:
     /*
      * Region file writer constructor
      */
-    region_file_writer(const region_file_writer &other) : region_file(other.path, other.reg) { return; }
+    region_file_writer(const region_file_writer& other) : region_file(other.path, other.reg) { return; }
 
     /*
      * Region file writer constructor
      */
-    region_file_writer(const std::string &path) : region_file(path) { return; }
+    region_file_writer(const std::string& path) : region_file(path) { return; }
 
     /*
      * Region file writer constructor
      */
-    region_file_writer(const std::string &path, const region &reg) : region_file(path, reg) { return; }
+    region_file_writer(const std::string& path, const region& reg) : region_file(path, reg) { return; }
 
     /*
      * Region file writer destructor
@@ -62,22 +62,22 @@ public:
     /*
      * Region file writer assignment operator
      */
-    region_file_writer &operator=(const region_file_writer &other);
+    region_file_writer& operator=(const region_file_writer& other);
 
     /*
      * Region file writer equals operator
      */
-    bool operator==(const region_file_writer &other);
+    bool operator==(const region_file_writer& other);
 
     /*
      * Region file writer not-equals operator
      */
-    bool operator!=(const region_file_writer &other) { return !(*this == other); }
+    bool operator!=(const region_file_writer& other) { return !(*this == other); }
 
     /*
      * Returns a region file writer's file
      */
-    std::ofstream &get_file(void) { return file; }
+    std::ofstream& get_file(void) { return file; }
 
     /*
      * Returns a string representation of a region file writer

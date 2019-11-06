@@ -24,84 +24,84 @@
 /*
  * String tag assignment operator
  */
-string_tag &string_tag::operator=(const string_tag &other) {
+string_tag& string_tag::operator=(const string_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	name = other.name;
-	type = other.type;
-	value = other.value;
-	return *this;
+    // assign attributes
+    name = other.name;
+    type = other.type;
+    value = other.value;
+    return *this;
 }
 
 /*
  * String tag equals operator
  */
-bool string_tag::operator==(const generic_tag &other) {
+bool string_tag::operator==(const generic_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// convert into same type
-	const string_tag *other_tag = dynamic_cast<const string_tag *>(&other);
-	if(!other_tag)
-		return false;
+    // convert into same type
+    const string_tag* other_tag = dynamic_cast<const string_tag*>(&other);
+    if (!other_tag)
+        return false;
 
-	// check attributes
-	return name == other.name
-			&& type == other.type
-			&& value == other_tag->value;
+    // check attributes
+    return name == other.name
+           && type == other.type
+           && value == other_tag->value;
 }
 
 /*
  * Return a string tag's data
  */
-std::vector<char> string_tag::get_data(bool list_ele)  {
-	byte_stream stream(byte_stream::SWAP_ENDIAN);
+std::vector<char> string_tag::get_data(bool list_ele) {
+    byte_stream stream(byte_stream::SWAP_ENDIAN);
 
-	get_data(list_ele, stream);
+    get_data(list_ele, stream);
 
-	return stream.vbuf();
+    return stream.vbuf();
 }
 
 /*
  * Save a string tag's data to a stream
  */
-void string_tag::get_data(bool list_ele, byte_stream& stream)  {
-	// form data representation
-	if(!list_ele) {
-		stream << (char) type;
-		stream << (short) name.size();
-		stream << name;
-	}
-	stream << value;
+void string_tag::get_data(bool list_ele, byte_stream& stream) {
+    // form data representation
+    if (!list_ele) {
+        stream << (char) type;
+        stream << (short) name.size();
+        stream << name;
+    }
+    stream << value;
 }
 
 /*
  * Return a double tag's data size, equivalent to get_data().size(), but faster.
  */
-unsigned int string_tag::get_data_size(bool list_ele){
-	unsigned int total = 0; //nothing yet
+unsigned int string_tag::get_data_size(bool list_ele) {
+    unsigned int total = 0; //nothing yet
 
-	if (!list_ele){
-		total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
-	}
+    if (!list_ele) {
+        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+    }
 
-	total+= 2 + value.size(); //1 byte in short size, and then chars
-	return total;
+    total += 2 + value.size(); //1 byte in short size, and then chars
+    return total;
 }
 
 /*
  * Return a string representation of a string tag
  */
 std::string string_tag::to_string(unsigned int tab) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	ss << generic_tag::to_string(tab) << ": " << value;
-	return ss.str();
+    // form string representation
+    ss << generic_tag::to_string(tab) << ": " << value;
+    return ss.str();
 }

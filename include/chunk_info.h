@@ -25,107 +25,108 @@
 class chunk_info {
 private:
 
-	/*
-	 * Time last modified, offset, and data length
-	 */
-	unsigned int modified, offset, length;
+    /*
+     * Time last modified, offset, and data length
+     */
+    unsigned int modified, offset, length;
 
-	/*
-	 * Compression type
-	 */
-	char type;
+    /*
+     * Compression type
+     */
+    char type;
 
 public:
 
-	/*
-	 * Compression types
-	 */
-	enum TYPE { GZIP = 1, ZLIB };
+    /*
+     * Compression types
+     */
+    enum TYPE { GZIP = 1, ZLIB };
 
-	/*
-	 * Chunk info constructor
-	 */
-	chunk_info(void) : modified(0), offset(0), length(0), type(GZIP) { return; }
+    /*
+     * Chunk info constructor
+     */
+    chunk_info(void) : modified(0), offset(0), length(0), type(GZIP) { return; }
 
-	/*
-	 * Chunk info constructor
-	 */
-	chunk_info(const chunk_info &other) : modified(other.modified), offset(other.offset), length(other.length), type(other.type) { return; }
+    /*
+     * Chunk info constructor
+     */
+    chunk_info(const chunk_info& other) : modified(other.modified), offset(other.offset), length(other.length), type(other.type) { return; }
 
-	/*
-	 * Chunk info constructor
-	 */
-	chunk_info(unsigned int offset, unsigned int length, char type, unsigned int modified) : modified(modified), offset(offset), length(length), type(type) { return; }
+    /*
+     * Chunk info constructor
+     */
+    chunk_info(unsigned int offset, unsigned int length, char type, unsigned int modified) : modified(modified), offset(offset), length(length),
+                                                                                             type(type) { return; }
 
-	/*
-	 * Chunk info destructor
-	 */
-	virtual ~chunk_info(void) { return; }
+    /*
+     * Chunk info destructor
+     */
+    virtual ~chunk_info(void) { return; }
 
-	/*
-	 * Chunk info assignment operator
-	 */
-	chunk_info &operator=(const chunk_info &other);
+    /*
+     * Chunk info assignment operator
+     */
+    chunk_info& operator=(const chunk_info& other);
 
-	/*
-	 * Chunk info equals operator
-	 */
-	bool operator==(const chunk_info &other);
+    /*
+     * Chunk info equals operator
+     */
+    bool operator==(const chunk_info& other);
 
-	/*
-	 * Chunk info not-equals operator
-	 */
-	bool operator!=(const chunk_info &other) { return !(*this == other); }
+    /*
+     * Chunk info not-equals operator
+     */
+    bool operator!=(const chunk_info& other) { return !(*this == other); }
 
-	/*
-	 * Returns a chunk's empty status
-	 */
-	bool empty(void) { return !offset; }
+    /*
+     * Returns a chunk's empty status
+     */
+    bool empty(void) { return !offset; }
 
-	/*
-	 * Return a chunk's data length
-	 */
-	unsigned int get_length(void) { return length; }
+    /*
+     * Return a chunk's data length
+     */
+    unsigned int get_length(void) { return length; }
 
-	/*
-	 * Return a chunk's time last modified
-	 */
-	unsigned int get_modified(void) { return modified; }
+    /*
+     * Return a chunk's time last modified
+     */
+    unsigned int get_modified(void) { return modified; }
 
-	/*
-	 * Return a chunk's file offset
-	 */
-	unsigned int get_offset(void) { return offset; }
+    /*
+     * Return a chunk's file offset
+     */
+    unsigned int get_offset(void) { return offset; }
 
-	/*
-	 * Return a chunk's compression type
-	 */
-	char get_type(void) { return type; }
+    /*
+     * Return a chunk's compression type
+     */
+    char get_type(void) { return type; }
 
-	/*
-	 * Set a chunk's data length
-	 */
-	void set_length(unsigned int length) { this->length = length; }
+    /*
+     * Set a chunk's data length
+     */
+    void set_length(unsigned int length) { this->length = length; }
 
-	/*
-	 * Set a chunk's time last modified
-	 */
-	void set_modified(unsigned int modified) { this->modified = modified; }
+    /*
+     * Set a chunk's time last modified
+     */
+    void set_modified(unsigned int modified) { this->modified = modified; }
 
-	/*
-	 * Set a chunk's file offset
-	 */
-	void set_offset(unsigned int offset) { this->offset = offset; }
+    /*
+     * Set a chunk's file offset
+     */
+    void set_offset(unsigned int offset) { this->offset = offset; }
 
-	/*
-	 * Set a chunk's compression type
-	 */
-	void set_type(char type) { this->type = type; }
+    /*
+     * Set a chunk's compression type
+     */
+    void set_type(char type) { this->type = type; }
 
-	/*
-	 * Returns a string representation of a chunk
-	 */
-	std::string to_string(void);
+    /*
+     * Returns a string representation of a chunk
+     */
+    std::string to_string(void);
 };
 
 #endif // CHUNK_INFO_H_

@@ -27,89 +27,89 @@
 
 class region_header {
 
-	/*
-	 * Total header size
-	 */
-	static const unsigned int HEADER_LENGTH = 8192;
+    /*
+     * Total header size
+     */
+    static const unsigned int HEADER_LENGTH = 8192;
 
 private:
 
-	/*
-	 * Holds information on all chunks
-	 */
-	chunk_info info[region_dim::CHUNK_COUNT];
+    /*
+     * Holds information on all chunks
+     */
+    chunk_info info[region_dim::CHUNK_COUNT];
 
 public:
 
-	/*
-	 * Region header constructor
-	 */
-	region_header(void);
+    /*
+     * Region header constructor
+     */
+    region_header(void);
 
-	/*
-	 * Region header constructor
-	 */
-	region_header(const region_header &other);
+    /*
+     * Region header constructor
+     */
+    region_header(const region_header& other);
 
-	/*
-	 * Region header constructor
-	 */
-	region_header(const chunk_info (&info)[region_dim::CHUNK_COUNT]);
+    /*
+     * Region header constructor
+     */
+    region_header(const chunk_info (& info)[region_dim::CHUNK_COUNT]);
 
-	/*
-	 * Region header destructor
-	 */
-	virtual ~region_header(void) { return; }
+    /*
+     * Region header destructor
+     */
+    virtual ~region_header(void) { return; }
 
-	/*
-	 * Region header assignment operator
-	 */
-	region_header &operator=(const region_header &other);
+    /*
+     * Region header assignment operator
+     */
+    region_header& operator=(const region_header& other);
 
-	/*
-	 * Region header equals operator
-	 */
-	bool operator==(const region_header &other);
+    /*
+     * Region header equals operator
+     */
+    bool operator==(const region_header& other);
 
-	/*
-	 * Region header not-equals operator
-	 */
-	bool operator!=(const region_header &other) { return !(*this == other); }
+    /*
+     * Region header not-equals operator
+     */
+    bool operator!=(const region_header& other) { return !(*this == other); }
 
-	/*
-	 * Return a region header's region count
-	 */
-	unsigned int get_count(void);
+    /*
+     * Return a region header's region count
+     */
+    unsigned int get_count(void);
 
-	/*
-	 * Return a region header as character vector
-	 */
-	std::vector<char> get_data(void);
+    /*
+     * Return a region header as character vector
+     */
+    std::vector<char> get_data(void);
 
-	/*
-	 * Return a region header's info
-	 */
-	const chunk_info (&get_info(void) const)[region_dim::CHUNK_COUNT] { return info; }
+    /*
+     * Return a region header's info
+     */
+    const chunk_info (& get_info(void) const )[region_dim::CHUNK_COUNT] { return info; }
 
-	/*
-	 * Return a region header's info at a given index
-	 */
-	chunk_info &get_info_at(unsigned int index);
+    /*
+     * Return a region header's info at a given index
+     */
+    chunk_info& get_info_at(unsigned int index);
 
-	/*
-	 * Set a region header's info
-	 */
-	void set_info(const chunk_info (&info)[region_dim::CHUNK_COUNT]);
+    /*
+     * Set a region header's info
+     */
+    void set_info(const chunk_info (& info)[region_dim::CHUNK_COUNT]);
 
-	/*
-	 * Set a region header's info at a given index
-	 */
-	void set_info_at(unsigned int index, const chunk_info &info);
+    /*
+     * Set a region header's info at a given index
+     */
+    void set_info_at(unsigned int index, const chunk_info& info);
 
-	/*
-	 * Return a string representation of a region header
-	 */
-	std::string to_string(void);
+    /*
+     * Return a string representation of a region header
+     */
+    std::string to_string(void);
 };
 
 #endif // REGION_HEADER_H_

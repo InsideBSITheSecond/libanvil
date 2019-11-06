@@ -27,87 +27,87 @@
 class short_tag : public generic_tag {
 private:
 
-	/*
-	 * Short tag value
-	 */
-	short value;
+    /*
+     * Short tag value
+     */
+    short value;
 
 public:
 
-	/*
-	 * Short tag constructor
-	 */
-	short_tag(void) : generic_tag(SHORT) { value = 0; }
+    /*
+     * Short tag constructor
+     */
+    short_tag(void) : generic_tag(SHORT) { value = 0; }
 
-	/*
-	 * Short tag constructor
-	 */
-	short_tag(const short_tag &other) : generic_tag(other.name, SHORT) { value = other.value; };
+    /*
+     * Short tag constructor
+     */
+    short_tag(const short_tag& other) : generic_tag(other.name, SHORT) { value = other.value; };
 
-	/*
-	 * Short tag constructor
-	 */
-	short_tag(const std::string &name) : generic_tag(name, SHORT) { value = 0; }
+    /*
+     * Short tag constructor
+     */
+    short_tag(const std::string& name) : generic_tag(name, SHORT) { value = 0; }
 
-	/*
-	 * Short tag constructor
-	 */
-	short_tag(short value) : generic_tag(SHORT) { this->value = value; }
+    /*
+     * Short tag constructor
+     */
+    short_tag(short value) : generic_tag(SHORT) { this->value = value; }
 
-	/*
-	 * Short tag constructor
-	 */
-	short_tag(const std::string &name, short value) : generic_tag(name, SHORT) { this->value = value; }
+    /*
+     * Short tag constructor
+     */
+    short_tag(const std::string& name, short value) : generic_tag(name, SHORT) { this->value = value; }
 
-	/*
-	 * Short tag destructor
-	 */
-	virtual ~short_tag(void) { return; }
+    /*
+     * Short tag destructor
+     */
+    virtual ~short_tag(void) { return; }
 
-	/*
-	 * Short tag assignment operator
-	 */
-	short_tag &operator=(const short_tag &other);
+    /*
+     * Short tag assignment operator
+     */
+    short_tag& operator=(const short_tag& other);
 
-	/*
-	 * Short tag equals operator
-	 */
-	bool operator==(const generic_tag &other);
+    /*
+     * Short tag equals operator
+     */
+    bool operator==(const generic_tag& other);
 
-	/*
-	 * Short tag not-equals operator
-	 */
-	bool operator!=(const generic_tag &other) { return !(*this == other); }
+    /*
+     * Short tag not-equals operator
+     */
+    bool operator!=(const generic_tag& other) { return !(*this == other); }
 
-	/*
-	 * Get a short tag's data
-	 */
-	std::vector<char> get_data(bool list_ele);
+    /*
+     * Get a short tag's data
+     */
+    std::vector<char> get_data(bool list_ele);
 
-	/*
-	 * Save a short tag's data to a stream
-	 */
-	void get_data(bool list_ele, byte_stream& stream);
+    /*
+     * Save a short tag's data to a stream
+     */
+    void get_data(bool list_ele, byte_stream& stream);
 
-	/*
-	 * Return the size of a short tag's data. Equivaluent to get_data().size(), but faster;
-	 */
-	unsigned int get_data_size(bool list_ele);
+    /*
+     * Return the size of a short tag's data. Equivaluent to get_data().size(), but faster;
+     */
+    unsigned int get_data_size(bool list_ele);
 
-	/*
-	 * Return a short tag's value
-	 */
-	short get_value(void) { return value; }
+    /*
+     * Return a short tag's value
+     */
+    short get_value(void) { return value; }
 
-	/*
-	 * Set a short tag's value
-	 */
-	void set_value(short value) { this->value = value; }
+    /*
+     * Set a short tag's value
+     */
+    void set_value(short value) { this->value = value; }
 
-	/*
-	 * Return a string representation of a short tag
-	 */
-	std::string to_string(unsigned int tab);
+    /*
+     * Return a string representation of a short tag
+     */
+    std::string to_string(unsigned int tab);
 };
 
 #endif // SHORT_TAG_H_

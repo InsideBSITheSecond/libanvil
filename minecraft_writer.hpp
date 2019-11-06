@@ -26,52 +26,52 @@
 #include "region_dim.hpp"
 
 
-class minecraft_writer{
+class minecraft_writer {
 private:
-	/*
-	 * Map for holding region writer pointers, (x,z) pair for a key
-	 */
-	std::map<std::pair<int,int>, region_file_writer*> regions; 
+    /*
+     * Map for holding region writer pointers, (x,z) pair for a key
+     */
+    std::map<std::pair<int, int>, region_file_writer*> regions;
 
-	void cleanup(void){
-		for (std::map<std::pair<int,int>, region_file_writer*>::iterator iter = regions.begin(); 
-			iter != regions.end();iter++){ //iterate over all regions
+    void cleanup(void) {
+        for (std::map<std::pair<int, int>, region_file_writer*>::iterator iter = regions.begin();
+             iter != regions.end(); iter++) { //iterate over all regions
 
-			delete iter->second; //delete reions
-		}
-	}
+            delete iter->second; //delete reions
+        }
+    }
 
 public:
-	
-	/*
-	 * No-arg minecraft_writer constructor
-	 */
-	minecraft_writer(void);
 
-	/*
-	 * Specifies the block at the given location in the world
-	 */
-	void place_block_at(char block, int x, int y, int z);
+    /*
+     * No-arg minecraft_writer constructor
+     */
+    minecraft_writer(void);
 
-	/*
-	 * Specifies the block data at the given location in the world
-	 */
-	void place_data_at(char data, int x, int y, int z);
+    /*
+     * Specifies the block at the given location in the world
+     */
+    void place_block_at(char block, int x, int y, int z);
 
-	/*
-	 * Returns a region file writer at the needed, creating it if needed
-	 */
-	region_file_writer* get_region(int reg_x, int reg_z);
+    /*
+     * Specifies the block data at the given location in the world
+     */
+    void place_data_at(char data, int x, int y, int z);
 
-	/*
-	 * Writes all the regions to their respective files.
-	 */
-	void write(void);
+    /*
+     * Returns a region file writer at the needed, creating it if needed
+     */
+    region_file_writer* get_region(int reg_x, int reg_z);
 
-	/*
-	 * Returns the section tag for the current position, creating it as needed.
-	 */
-	compound_tag* get_section_tag_at(int x, int y, int z);
+    /*
+     * Writes all the regions to their respective files.
+     */
+    void write(void);
+
+    /*
+     * Returns the section tag for the current position, creating it as needed.
+     */
+    compound_tag* get_section_tag_at(int x, int y, int z);
 };
 
 #endif

@@ -24,84 +24,84 @@
 /*
  * Short tag assignment operator
  */
-short_tag &short_tag::operator=(const short_tag &other) {
+short_tag& short_tag::operator=(const short_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return *this;
+    // check for self
+    if (this == &other)
+        return *this;
 
-	// assign attributes
-	name = other.name;
-	type = other.type;
-	value = other.value;
-	return *this;
+    // assign attributes
+    name = other.name;
+    type = other.type;
+    value = other.value;
+    return *this;
 }
 
 /*
  * Short tag equals operator
  */
-bool short_tag::operator==(const generic_tag &other) {
+bool short_tag::operator==(const generic_tag& other) {
 
-	// check for self
-	if(this == &other)
-		return true;
+    // check for self
+    if (this == &other)
+        return true;
 
-	// convert into same type
-	const short_tag *other_tag = dynamic_cast<const short_tag *>(&other);
-	if(!other_tag)
-		return false;
+    // convert into same type
+    const short_tag* other_tag = dynamic_cast<const short_tag*>(&other);
+    if (!other_tag)
+        return false;
 
-	// check attributes
-	return name == other.name
-			&& type == other.type
-			&& value == other_tag->value;
+    // check attributes
+    return name == other.name
+           && type == other.type
+           && value == other_tag->value;
 }
 
 /*
  * Return a short tag's data
  */
-std::vector<char> short_tag::get_data(bool list_ele)  {
-	byte_stream stream(byte_stream::SWAP_ENDIAN);
+std::vector<char> short_tag::get_data(bool list_ele) {
+    byte_stream stream(byte_stream::SWAP_ENDIAN);
 
-	get_data(list_ele, stream);
+    get_data(list_ele, stream);
 
-	return stream.vbuf();
+    return stream.vbuf();
 }
 
 /*
  * Save a short tag's data to a stream
  */
-void short_tag::get_data(bool list_ele, byte_stream& stream)  {
-	// form data representation
-	if(!list_ele) {
-		stream << (char) type;
-		stream << (short) name.size();
-		stream << name;
-	}
-	stream << value;
+void short_tag::get_data(bool list_ele, byte_stream& stream) {
+    // form data representation
+    if (!list_ele) {
+        stream << (char) type;
+        stream << (short) name.size();
+        stream << name;
+    }
+    stream << value;
 }
 
 /*
  * Return a short tag's data size, equivalent to get_data().size(), but faster.
  */
-unsigned int short_tag::get_data_size(bool list_ele){
-	unsigned int total = 0; //nothing yet
+unsigned int short_tag::get_data_size(bool list_ele) {
+    unsigned int total = 0; //nothing yet
 
-	if (!list_ele){
-		total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
-	}
+    if (!list_ele) {
+        total += 1 + 2 + name.size(); //1 for type, 2 for short size, and every symbol in the name.
+    }
 
-	total += 2; //2 bytes in a short
-	return total;
+    total += 2; //2 bytes in a short
+    return total;
 }
 
 /*
  * Return a string representation of a short tag
  */
 std::string short_tag::to_string(unsigned int tab) {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	// form string representation
-	ss << generic_tag::to_string(tab) << ": " << value;
-	return ss.str();
+    // form string representation
+    ss << generic_tag::to_string(tab) << ": " << value;
+    return ss.str();
 }
