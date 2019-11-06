@@ -139,6 +139,44 @@ region_file_reader::get_block_at(unsigned int x, unsigned int z, unsigned int b_
         ((b_y % region_dim::BLOCK_WIDTH) * region_dim::BLOCK_WIDTH + b_z) * region_dim::BLOCK_WIDTH + b_x);
 }
 
+std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsigned int chunkZ, unsigned int blockX, unsigned int BlockZ) {
+    std::vector<generic_tag*> sections;
+    unsigned int pos = chunkZ * region_dim::CHUNK_WIDTH + chunkX;
+
+    std::vector<Block> foundBlocks;
+
+    // For debug
+    std::vector<generic_tag*> xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
+    int xPos = static_cast<int_tag*>(xPosEntries.at(0))->get_value();
+    int blockIdX = xPos * 16;
+    std::vector<generic_tag*> zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
+    int zPos = static_cast<int_tag*>(zPosEntries.at(0))->get_value();
+    int blockIdZ = zPos * 16;
+
+    //std::cout << "In " << xPos << " " << zPos << std::endl;
+
+    sections = reg.get_tag_at(pos).get_sub_tag_by_name("Sections");
+
+    if (sections.size() != 1) {
+        throw std::out_of_range("Number of sections is not equal to 1");
+    }
+
+
+    list_tag* subChunk = static_cast<list_tag*>(sections[0]);
+    for (int i = 0; i < subChunk->size(); ++i) {
+        compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
+        std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, blockX, BlockZ);
+
+        for (Block& b : subchunkBlocks) {
+            std::array<int, 3> blockPosInChunk = b.getPos();
+            b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
+        }
+        foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+    }//for sectionEntries (aka subchunks)
+
+    return foundBlocks;
+}
+
 /*
  * Returns a region's blocks at a given x, z coord
  */
@@ -151,10 +189,12 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
     // For debug
     std::vector<generic_tag*> xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
     int xPos = static_cast<int_tag*>(xPosEntries.at(0))->get_value();
+    int blockIdX = xPos * 16;
     std::vector<generic_tag*> zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
     int zPos = static_cast<int_tag*>(zPosEntries.at(0))->get_value();
+    int blockIdZ = zPos * 16;
 
-    //std::cout << "In " << xPos << " " << +yPos << " " << zPos << std::endl;
+    //std::cout << "In " << xPos  << " " << zPos << std::endl;
 
     sections = reg.get_tag_at(pos).get_sub_tag_by_name("Sections");
 
@@ -162,11 +202,22 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
         throw std::out_of_range("Number of sections is not equal to 1");
     }
 
+
     list_tag* subChunk = static_cast<list_tag*>(sections[0]);
     for (int i = 0; i < subChunk->size(); ++i) {
-        compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
-        std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, x, z);
-        foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+        for (int x = 0; x < 16; ++x) {
+            for (int z = 0; z < 16; ++z) {
+                compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
+                std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, x, z);
+                for (Block& b : subchunkBlocks) {
+                    std::array<int, 3> blockPosInChunk = b.getPos();
+                    b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
+                }
+                foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+            }
+        }
+
+
     }//for sectionEntries (aka subchunks)
 
     return foundBlocks;
@@ -176,8 +227,9 @@ std::vector<Block>
 region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int x, unsigned int z) {
     std::vector<Block> blockList;
 
-//    byte_tag *yValue = static_cast<byte_tag *>(sectionEntry->get_subtag("Y"));
-//    char yPos = yValue->get_value();
+    byte_tag* yValue = static_cast<byte_tag*>(sectionEntry->get_subtag("Y"));
+    int yPos = yValue->get_value();
+
 
     generic_tag* blockStates = sectionEntry->get_subtag("BlockStates");
     if (!blockStates) {
@@ -193,8 +245,8 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
     std::vector<int> retVal(4096, 0); // 4096 times 0
 
     for (int y = 0; y < 16; ++y) {
-        uint16_t blockNumber = 16 * 16 * y + 16 * z * x;
-        unsigned int indexOffset = blockNumber * bitPerIndex;
+        uint64_t blockNumber = 16 * 16 * y + 16 * z + x;
+        uint64_t indexOffset = blockNumber * bitPerIndex;
 
         uint64_t paletteIndex = getPaletteIndex(blockStateEntries, indexOffset, bitPerIndex);
 
@@ -205,7 +257,14 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
         std::string name = static_cast<string_tag*>(compountEntry)->get_value();
         name.erase(0, 10); // Erase minecraft:
 
-        blockList.emplace_back(name);
+        int realY = yPos * 16 + y;
+
+        Block block{name};
+
+        //std::cout << "(" << x << " " << realY << " " << z << std::endl;
+        block.setPos(x, realY, z);
+
+        blockList.push_back(block);
     }
 
     if (blockList.size() > 16) {
@@ -215,7 +274,7 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
     return blockList;
 }
 
-uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, unsigned int offset, unsigned int bitPerIndex) {
+uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex) {
     unsigned int indexOfInterest = offset / 64;
     unsigned int lowerBound = offset % 64;
     unsigned int upperBound = lowerBound + bitPerIndex;

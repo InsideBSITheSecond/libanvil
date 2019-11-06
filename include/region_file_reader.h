@@ -38,18 +38,18 @@ private:
     /*
      * Read a chunk tag from data
      */
-    void parse_chunk_tag(std::vector<char> &data, chunk_tag &tag);
+    void parse_chunk_tag(std::vector<char>& data, chunk_tag& tag);
 
     /*
      * Read a tag from data
      */
-    generic_tag *parse_tag(byte_stream &stream, bool is_list, char list_type);
+    generic_tag* parse_tag(byte_stream& stream, bool is_list, char list_type);
 
     /*
      * Reads an array tag value from stream
      */
     template<class T>
-    std::vector<T> read_array_value(byte_stream &stream) {
+    std::vector<T> read_array_value(byte_stream& stream) {
         int ele_len;
         std::vector<T> value;
 
@@ -60,8 +60,9 @@ private:
         // retrieve value
         ele_len = read_value<int>(stream);
         value.reserve(ele_len);
-        for (int i = 0; i < ele_len; ++i)
+        for (int i = 0; i < ele_len; ++i) {
             value.push_back(read_value<T>(stream));
+        }
         return value;
     }
 
@@ -78,7 +79,7 @@ private:
     /*
      * Reads a string tag value from stream
      */
-    std::string read_string_value(byte_stream &stream);
+    std::string read_string_value(byte_stream& stream);
 
     /*
      * Reads all bits in range from start to end from the given buffer, eg.
@@ -90,7 +91,7 @@ private:
      * Reads a numeric tag value from stream
      */
     template<class T>
-    T read_value(byte_stream &stream) {
+    T read_value(byte_stream& stream) {
         T value;
 
         // check stream status
@@ -106,7 +107,7 @@ private:
      * Reads a long value from stream
      */
     template<class T>
-    T read_long_value(byte_stream &stream) {
+    T read_long_value(byte_stream& stream) {
         T value;
 
         // check stream status
@@ -125,9 +126,9 @@ private:
         return value;
     }
 
-    std::vector<Block> get_blocks_from_subchunk(compound_tag *sectionEntry, unsigned int x, unsigned int z);
+    std::vector<Block> get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int x, unsigned int z);
 
-    uint64_t getPaletteIndex(std::vector<int64_t> const &blockStateEntries, unsigned int offset, unsigned int bitPerIndex);
+    uint64_t getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex);
 
 public:
 
@@ -139,12 +140,12 @@ public:
     /*
      * Region file reader constructor
      */
-    region_file_reader(const std::string &path) : region_file(path) { return; }
+    region_file_reader(const std::string& path) : region_file(path) { return; }
 
     /*
      * Region file reader constructor
      */
-    region_file_reader(const region_file_reader &other) : region_file(other.path, other.reg) { return; }
+    region_file_reader(const region_file_reader& other) : region_file(other.path, other.reg) { return; }
 
     /*
      * Region file reader destructor
@@ -154,17 +155,17 @@ public:
     /*
      * Region file reader assignment operator
      */
-    region_file_reader &operator=(const region_file_reader &other);
+    region_file_reader& operator=(const region_file_reader& other);
 
     /*
      * Region file reader equals operator
      */
-    bool operator==(const region_file_reader &other);
+    bool operator==(const region_file_reader& other);
 
     /*
      * Region file reader not-equals operator
      */
-    bool operator!=(const region_file_reader &other) { return !(*this == other); }
+    bool operator!=(const region_file_reader& other) { return !(*this == other); }
 
     /*
      * Returns a region biome value at a given x, z & b coord
@@ -186,11 +187,15 @@ public:
      */
     std::vector<Block> get_blocks_at(unsigned int x, unsigned int z);
 
+    /*
+     * Returns a region's blocks at a given x, z coord in the given chunk
+     */
+    std::vector<Block> get_blocks_at(unsigned int chunkX, unsigned int chunkZ, unsigned int blockX, unsigned int BlockZ);
 
     /*
      * Returns a region's chunk tag at a given x, z coord
      */
-    chunk_tag &get_chunk_tag_at(unsigned int x, unsigned int z);
+    chunk_tag& get_chunk_tag_at(unsigned int x, unsigned int z);
 
     /*
      * Returns a region height value at a given x, z & b coord
@@ -205,7 +210,7 @@ public:
     /*
      * Returns a region file reader's file
      */
-    std::ifstream &get_file(void) { return file; }
+    std::ifstream& get_file(void) { return file; }
 
     /*
      * Return a region's x coordinate
