@@ -165,13 +165,13 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsign
     list_tag* subChunk = static_cast<list_tag*>(sections[0]);
     for (int i = 0; i < subChunk->size(); ++i) {
         compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
-        std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, blockX, BlockZ);
+       // std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, blockX, BlockZ);
 
-        for (Block& b : subchunkBlocks) {
-            std::array<int, 3> blockPosInChunk = b.getPos();
-            b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
-        }
-        foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+        //for (Block& b : subchunkBlocks) {
+        //    std::array<int, 3> blockPosInChunk = b.getPos();
+        //    b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
+        //}
+        //foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
     }//for sectionEntries (aka subchunks)
 
     return foundBlocks;
@@ -185,12 +185,23 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
     unsigned int pos = z * region_dim::CHUNK_WIDTH + x;
 
     std::vector<Block> foundBlocks;
+    foundBlocks.reserve(16 * 16 * 16);
 
     // For debug
     std::vector<generic_tag*> xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
+    std::vector<generic_tag*> zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
+
+    if (xPosEntries.empty() || zPosEntries.empty()) {
+        read_chunk(x, z);
+        xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
+        zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
+        if (xPosEntries.empty() || zPosEntries.empty()) {
+            throw std::out_of_range("Could not loat chunk at " + std::to_string(x) + "|" + std::to_string(z));
+        }
+    }
+
     int xPos = static_cast<int_tag*>(xPosEntries.at(0))->get_value();
     int blockIdX = xPos * 16;
-    std::vector<generic_tag*> zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
     int zPos = static_cast<int_tag*>(zPosEntries.at(0))->get_value();
     int blockIdZ = zPos * 16;
 
@@ -208,12 +219,7 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {
                 compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
-                std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, x, z);
-                for (Block& b : subchunkBlocks) {
-                    std::array<int, 3> blockPosInChunk = b.getPos();
-                    b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
-                }
-                foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+                get_blocks_from_subchunk(subChunkEntry, x, z, blockIdX, blockIdZ, foundBlocks);
             }
         }
 
@@ -223,17 +229,15 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
     return foundBlocks;
 }
 
-std::vector<Block>
-region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int x, unsigned int z) {
-    std::vector<Block> blockList;
+void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
+                                                  unsigned int blockZ, std::vector<Block>& blockList) {
 
     byte_tag* yValue = static_cast<byte_tag*>(sectionEntry->get_subtag("Y"));
     int yPos = yValue->get_value();
 
-
     generic_tag* blockStates = sectionEntry->get_subtag("BlockStates");
     if (!blockStates) {
-        return blockList; // air-only subchunks are empty
+        return; // air-only subchunks are empty
     }
     generic_tag* palette = sectionEntry->get_subtag("Palette");
 
@@ -242,10 +246,9 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
 
     // Iterate through block states, calculate palette indices and query indices value
     int bitPerIndex = static_cast<int>(blockStateEntries.size() * 64 / 4096);
-    std::vector<int> retVal(4096, 0); // 4096 times 0
 
     for (int y = 0; y < 16; ++y) {
-        uint64_t blockNumber = 16 * 16 * y + 16 * z + x;
+        uint64_t blockNumber = 16 * 16 * y + 16 * chunkZ + chunkX;
         uint64_t indexOffset = blockNumber * bitPerIndex;
 
         uint64_t paletteIndex = getPaletteIndex(blockStateEntries, indexOffset, bitPerIndex);
@@ -259,19 +262,8 @@ region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigne
 
         int realY = yPos * 16 + y;
 
-        Block block{name};
-
-        //std::cout << "(" << x << " " << realY << " " << z << std::endl;
-        block.setPos(x, realY, z);
-
-        blockList.push_back(block);
+        blockList.emplace_back(name, chunkX + blockX, realY, chunkZ + blockZ);
     }
-
-    if (blockList.size() > 16) {
-        throw std::out_of_range("Number of blocks exceeds maximal possible value for a subchunk (max=16)");
-    }
-
-    return blockList;
 }
 
 uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex) {
@@ -491,7 +483,7 @@ void region_file_reader::parse_chunk_tag(std::vector<char>& data, chunk_tag& tag
 /*
  * Reads a file into region_file
  */
-void region_file_reader::read(void) {
+void region_file_reader::read(bool lazy) {
     int x, z;
 
     // attempt to open file
@@ -508,8 +500,10 @@ void region_file_reader::read(void) {
     // read header data
     read_header();
 
-    // read chunk data
-    read_chunks();
+    if (!lazy) {
+        // read chunk data
+        read_chunks();
+    }
 
     // close file
     file.close();
@@ -557,6 +551,51 @@ void region_file_reader::read_chunks() {
         parse_chunk_tag(raw_vec, reg.get_tag_at(i));
     }
 }
+
+
+void region_file_reader::read_chunk(uint16_t x, uint16_t z) {
+    // attempt to open file
+    file.open(path.c_str(), std::ios::in | std::ios::binary);
+    if (!file.is_open())
+        throw std::runtime_error("Failed to open input file");
+
+    chunk_info info;
+
+    uint16_t chunkToRead = z * region_dim::CHUNK_WIDTH + x;
+
+
+    info = reg.get_header().get_info_at(chunkToRead);
+
+    // skip empty chunks
+    if (info.empty())
+        throw std::out_of_range("Chunk at " + std::to_string(x) + "|" + std::to_string(z) + " is empty");
+
+    // Retrieve raw data
+    char* raw_data = new char[info.get_length()];
+    std::vector<char> raw_vec;
+    file.seekg(info.get_offset(), std::ios::beg);
+    file.read((char*) raw_data, info.get_length());
+    raw_vec.assign(raw_data, raw_data + info.get_length());
+
+    // check for compression type
+    switch (info.get_type()) {
+        case chunk_info::GZIP:
+            throw std::runtime_error("Unsupported compression type");
+            break;
+        case chunk_info::ZLIB:
+            compression::inflate_(raw_vec);
+            break;
+        default:
+            throw std::runtime_error("Unknown compression type");
+            break;
+    }
+
+    // use data to fill chunk tag
+    parse_chunk_tag(raw_vec, reg.get_tag_at(chunkToRead));
+
+    file.close();
+}
+
 
 /*
  * Reads header data from a file
@@ -628,6 +667,8 @@ uint64_t region_file_reader::getBits(uint64_t val, unsigned int start, unsigned 
     val &= relevantBits;
     return val;
 }
+
+
 
 
 

@@ -126,9 +126,18 @@ private:
         return value;
     }
 
-    std::vector<Block> get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int x, unsigned int z);
+
+    void get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
+        unsigned int blockZ, std::vector<Block>& blockList);
 
     uint64_t getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex);
+
+    /*!
+     * Reads chunk information from the mca file at the given chunk
+     * \param x position of the CHUNK
+     * \param z position of the CHUNK
+     */
+    void read_chunk(uint16_t x, uint16_t z);
 
 public:
 
@@ -229,8 +238,9 @@ public:
 
     /*
      * Reads a file into region_file
+     * If lazy is true, a chunk is only parsed when data is requested from it.
      */
-    void read(void);
+    void read(bool lazy = false);
 
     /*
      * Returns a string representation of a region file reader
