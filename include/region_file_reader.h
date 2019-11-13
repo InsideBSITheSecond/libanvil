@@ -139,6 +139,11 @@ private:
      */
     void read_chunk(uint16_t x, uint16_t z);
 
+    /*
+     * Returns a region's blocks at a given x, z coord
+     */
+    void get_blocks_at(unsigned int x, unsigned int z, std::vector<Block>& foundBlocks);
+
 public:
 
     /*
@@ -192,9 +197,10 @@ public:
     int get_block_at(unsigned int x, unsigned int z, unsigned int b_x, unsigned int b_y, unsigned int b_z);
 
     /*
-     * Returns a region's blocks at a given x, z coord
-     */
-    std::vector<Block> get_blocks_at(unsigned int x, unsigned int z);
+    * Returns all blocks from lowerX, lowerZ to upperX, upperZ
+    */
+    std::vector<Block> get_blocks_in_range(unsigned int lowerX, unsigned int upperX, unsigned int lowerZ, unsigned int upperZ);
+
 
     /*
      * Returns a region's blocks at a given x, z coord in the given chunk

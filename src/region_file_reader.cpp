@@ -177,15 +177,24 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsign
     return foundBlocks;
 }
 
+std::vector<Block> region_file_reader::get_blocks_in_range(unsigned int lowerX, unsigned int upperX, unsigned int lowerZ, unsigned int upperZ) {
+    std::vector<Block> foundBlocks;
+    foundBlocks.reserve((upperX - lowerX) * (upperZ - lowerZ) * 16 * 16 * 16);
+    for (unsigned int x = lowerX; x < upperX; ++x) {
+        for (unsigned int z = lowerZ; z < upperZ; ++z) {
+            get_blocks_at(x, z, foundBlocks);
+        }
+    }
+    //foundBlocks.shrink_to_fit();
+    return foundBlocks;
+}
+
 /*
  * Returns a region's blocks at a given x, z coord
  */
-std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned int z) {
+void region_file_reader::get_blocks_at(unsigned int x, unsigned int z, std::vector<Block>& foundBlocks) {
     std::vector<generic_tag*> sections;
     unsigned int pos = z * region_dim::CHUNK_WIDTH + x;
-
-    std::vector<Block> foundBlocks;
-    foundBlocks.reserve(16 * 16 * 16);
 
     // For debug
     std::vector<generic_tag*> xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
@@ -225,8 +234,6 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int x, unsigned in
 
 
     }//for sectionEntries (aka subchunks)
-
-    return foundBlocks;
 }
 
 void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
