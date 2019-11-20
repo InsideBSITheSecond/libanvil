@@ -3,7 +3,6 @@
 #include <map>
 #include "Block.h"
 #include "ChunkRegistry.h"
-#include "BlockType.h"
 #include "Chunk.h"
 #include "region_file_reader.h"
 
@@ -40,7 +39,5 @@ public:
 
 private:
     std::map<std::array<int32_t, 2>, std::shared_ptr<Chunk>> loadedChunks;
-
-    std::map<std::string, BlockType> blockTypes; // name -> blockType
 
 };
