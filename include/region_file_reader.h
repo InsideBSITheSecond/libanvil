@@ -26,6 +26,8 @@
 #include "byte_stream.h"
 #include "region_file.h"
 #include "Block.h"
+#include "Chunk.h"
+
 
 class region_file_reader : public region_file {
 private:
@@ -130,6 +132,8 @@ private:
     void get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
         unsigned int blockZ, std::vector<Block>& blockList);
 
+    void addSubchunk(compound_tag* sectionEntry, int32_t chunkX, int32_t chunkZ, std::array<int32_t, 2> blockOffset, std::shared_ptr<Chunk> chunk);
+
     uint64_t getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex);
 
     /*!
@@ -206,6 +210,12 @@ public:
      * Returns a region's blocks at a given x, z coord in the given chunk
      */
     std::vector<Block> get_blocks_at(unsigned int chunkX, unsigned int chunkZ, unsigned int blockX, unsigned int BlockZ);
+
+    std::shared_ptr<Chunk> getChunkAt(int32_t x, int32_t z);
+
+    void readChunk(std::shared_ptr<Chunk> chunk);
+
+
 
     /*
      * Returns a region's chunk tag at a given x, z coord
