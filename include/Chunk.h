@@ -1,7 +1,9 @@
 #pragma once
 
 #include <map>
+#include <optional>
 #include "Block.h"
+
 
 class Chunk {
 public:
@@ -20,6 +22,14 @@ public:
 
     [[nodiscard]] std::map<std::array<int32_t, 3>, Block> const& getBlocks() const {
         return m_Chunks;
+    }
+
+    [[nodiscard]] std::optional<Block> getBlock(std::array<int32_t, 3> const& coord) const {
+        auto it = m_Chunks.find(coord);
+        if (it == m_Chunks.end()) {
+            return {};
+        }
+        return it->second;
     }
 
 private:

@@ -19,6 +19,10 @@ public:
 
     ChunkRegistry(const ChunkRegistry&&) = delete;
 
+    std::shared_ptr<Chunk> getChunkByBlockCoord(int32_t x, int32_t z) {
+        return getChunk(x / 16, z / 16);
+    }
+
     std::shared_ptr<Chunk> getChunk(int32_t x, int32_t z) {
         auto it = loadedChunks.find({ x, z });
         if (it != loadedChunks.end()) {
@@ -33,8 +37,19 @@ public:
         reader.read(true);
 
         auto chunk = reader.getChunkAt(x - mcaFileX * 32, z - mcaFileZ * 32);
+        loadedChunks[{x,z}] = chunk;
 
         return chunk;
+    }
+
+    [[nodiscard]]  std::optional<Block> getBlock(std::array<int32_t, 3> const& coord) const {
+        auto it = loadedChunks.find({coord[0] / 16, coord[2] / 16});
+
+        if (it == loadedChunks.end()) {
+            return {};
+        }
+
+        return it->second->getBlock(coord);
     }
 
 private:
