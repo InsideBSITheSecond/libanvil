@@ -359,9 +359,9 @@ void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, un
 
         int realY = yPos * 16 + y;
 
-        int blockX = chunkX + blockX;
-        int blockZ = chunkZ + blockZ;
-        Block block(name, {blockX, realY, blockZ});
+        int blockPosX = chunkX + blockX;
+        int blockPosZ = chunkZ + blockZ;
+        Block block(name, { blockPosX, realY, blockPosZ });
         blockList.push_back(block);
     }
 }
