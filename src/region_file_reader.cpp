@@ -39,6 +39,7 @@
 #include "../include/tag/long_array_tag.h"
 #include "../include/tag/short_tag.h"
 #include "../include/tag/string_tag.h"
+#include <cassert>
 
 /*
  * Region file reader assignment operator
@@ -205,13 +206,14 @@ void region_file_reader::addSubchunk(compound_tag* sectionEntry, int32_t chunkX,
     std::vector<generic_tag*> paletteEntries = static_cast<list_tag*>(palette)->get_value();
 
     // Iterate through block states, calculate palette indices and query indices value
-    int bitPerIndex = static_cast<int>(blockStateEntries.size() * 64 / 4096);
 
-    for (int y = 0; y < 16; ++y) {
-        uint64_t blockNumber = 16 * 16 * y + 16 * chunkZ + chunkX;
-        uint64_t indexOffset = blockNumber * bitPerIndex;
+    // Calculate the number of required bits. Depends on the size of the palette
+    int bitPerIndex = ceil(log2(paletteEntries.size()));//static_cast<int>(blockStateEntries.size() * 64 / 4096);
 
-        uint64_t paletteIndex = getPaletteIndex(blockStateEntries, indexOffset, bitPerIndex);
+    for (int subChunkCounter = 0; subChunkCounter < 16; ++subChunkCounter) { // From bottom to top
+        uint64_t blockNumber = 16 * 16 * subChunkCounter + 16 * chunkZ + chunkX;
+
+        uint64_t paletteIndex = getPaletteIndex(blockStateEntries, blockNumber, bitPerIndex);
 
         if (paletteIndex >= paletteEntries.size()) {
             throw std::out_of_range("Palette index out-of-range");
@@ -220,7 +222,7 @@ void region_file_reader::addSubchunk(compound_tag* sectionEntry, int32_t chunkX,
         std::string name = static_cast<string_tag*>(compountEntry)->get_value();
         name.erase(0, 10); // Erase minecraft:
 
-        int realY = yPos * 16 + y;
+        int realY = yPos * 16 + subChunkCounter;
         Block block{name, {chunkX + blockOffset[0], realY, chunkZ + blockOffset[1]}};
         chunk->addBlock(block);
 
@@ -326,7 +328,7 @@ void region_file_reader::get_blocks_at(unsigned int x, unsigned int z, std::vect
     }//for sectionEntries (aka subchunks)
 }
 
-void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
+void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, uint64_t chunkX, uint64_t chunkZ, unsigned int blockX,
                                                   unsigned int blockZ, std::vector<Block>& blockList) {
 
     byte_tag* yValue = static_cast<byte_tag*>(sectionEntry->get_subtag("Y"));
@@ -344,7 +346,7 @@ void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, un
     // Iterate through block states, calculate palette indices and query indices value
     int bitPerIndex = static_cast<int>(blockStateEntries.size() * 64 / 4096);
 
-    for (int y = 0; y < 16; ++y) {
+    for (uint64_t y = 0; y < 16; ++y) {
         uint64_t blockNumber = 16 * 16 * y + 16 * chunkZ + chunkX;
         uint64_t indexOffset = blockNumber * bitPerIndex;
 
@@ -366,21 +368,39 @@ void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, un
     }
 }
 
-uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex) {
-    unsigned int indexOfInterest = offset / 64;
-    unsigned int lowerBound = offset % 64;
-    unsigned int upperBound = lowerBound + bitPerIndex;
+uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t blockNumber, unsigned int bitPerIndex) {
     uint64_t paletteIndex = 0;
-    if (upperBound > 64) {
-        // The upper bound is in the next index
-        uint64_t lowerBits = getBits(blockStateEntries[indexOfInterest], lowerBound,
-                                     64); // Get remaining bits in current index
-        uint64_t higherBits = getBits(blockStateEntries[indexOfInterest + 1], 0,
-                                      upperBound - 64); // And the one from the next entry
 
-        paletteIndex = (higherBits << (64 - lowerBound) | lowerBits); // Combine values
-    } else {
-        paletteIndex = getBits(blockStateEntries[indexOfInterest], lowerBound, upperBound);
+    // Slight changes in 1.16:
+    if (bitPerIndex % 2 != 0) {
+        // Highest bits will not be used, eg at 5 bits the highest 4 bit wont be used.
+        uint8_t numberOfStatesPerEntry = 64 / bitPerIndex;
+        uint16_t vectorIndexForBlockOfInterest = (blockNumber / numberOfStatesPerEntry);
+
+        uint16_t stateNumberInEntry = blockNumber - vectorIndexForBlockOfInterest * numberOfStatesPerEntry;
+        uint16_t bitOffsetInEntry = stateNumberInEntry * bitPerIndex;
+        unsigned int lowerBound = bitOffsetInEntry;
+        unsigned int upperBound = lowerBound + bitPerIndex;
+
+        paletteIndex = getBits(blockStateEntries[vectorIndexForBlockOfInterest], lowerBound, upperBound);
+    }
+    else {
+        unsigned int indexOfInterest = (blockNumber * bitPerIndex) / 64;
+        unsigned int lowerBound = (blockNumber * bitPerIndex) % 64;
+        unsigned int upperBound = lowerBound + bitPerIndex;
+       
+        if (upperBound > 64) {
+            // The upper bound is in the next index
+            uint64_t lowerBits = getBits(blockStateEntries[indexOfInterest], lowerBound,
+                64); // Get remaining bits in current index
+            uint64_t higherBits = getBits(blockStateEntries[indexOfInterest + 1], 0,
+                upperBound - 64); // And the one from the next entry
+
+            paletteIndex = (higherBits << (64 - lowerBound) | lowerBits); // Combine values
+        }
+        else {
+            paletteIndex = getBits(blockStateEntries[indexOfInterest], lowerBound, upperBound);
+        }
     }
 
     return paletteIndex;
@@ -589,7 +609,7 @@ void region_file_reader::read(bool lazy) {
     // attempt to open file
     file.open(path.c_str(), std::ios::in | std::ios::binary);
     if (!file.is_open())
-        throw std::runtime_error("Failed to open input file");
+        throw std::runtime_error("Failed to open input file: " + path);
 
     // parse the filename for coordinants
     if (!is_region_file(path, x, z))

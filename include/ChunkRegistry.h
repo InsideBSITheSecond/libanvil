@@ -7,52 +7,26 @@
 #include "region_file_reader.h"
 
 /*!
- * The block registry contains a small subset of relevant blocks, but one should not expect it to be complete.
+ * The chunk registry contains a small subset of relevant blocks, but one should not expect it to be complete.
  * Only serves fast access
  */
 class ChunkRegistry {
 
 public:
-    ChunkRegistry() = default;
+    ChunkRegistry(std::string const &pathToRegionFolder);
 
-    ChunkRegistry(ChunkRegistry const&) = delete;
+    ChunkRegistry(ChunkRegistry const &) = delete;
 
-    ChunkRegistry(const ChunkRegistry&&) = delete;
+    ChunkRegistry(const ChunkRegistry &&) = delete;
 
-    std::shared_ptr<Chunk> getChunkByBlockCoord(int32_t x, int32_t z) {
-        return getChunk(x / 16, z / 16);
-    }
+    std::shared_ptr<Chunk> getChunkByBlockCoord(int32_t x, int32_t z);
 
-    std::shared_ptr<Chunk> getChunk(int32_t x, int32_t z) {
-        auto it = loadedChunks.find({ x, z });
-        if (it != loadedChunks.end()) {
-            return it->second;
-        }
+    std::shared_ptr<Chunk> getChunk(int32_t x, int32_t z);
 
-        int32_t mcaFileX = x / 32;
-        int32_t mcaFileZ = z / 32;
-        std::stringstream mcaFileName;
-        mcaFileName << "r." << mcaFileX << "." << mcaFileZ << ".mca";
-        region_file_reader reader(mcaFileName.str());
-        reader.read(true);
-
-        auto chunk = reader.getChunkAt(x - mcaFileX * 32, z - mcaFileZ * 32);
-        loadedChunks[{x,z}] = chunk;
-
-        return chunk;
-    }
-
-    [[nodiscard]]  std::optional<Block> getBlock(std::array<int32_t, 3> const& coord) const {
-        auto it = loadedChunks.find({coord[0] / 16, coord[2] / 16});
-
-        if (it == loadedChunks.end()) {
-            return {};
-        }
-
-        return it->second->getBlock(coord);
-    }
+    [[nodiscard]]  std::optional<Block> getBlock(std::array<int32_t, 3> const &coord) const;
 
 private:
-    std::map<std::array<int32_t, 2>, std::shared_ptr<Chunk>> loadedChunks;
+    std::string m_PathToRegionFolder;
 
+    std::map<std::array<int32_t, 2>, std::shared_ptr<Chunk>> loadedChunks;
 };

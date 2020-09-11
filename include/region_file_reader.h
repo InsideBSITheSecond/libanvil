@@ -129,12 +129,12 @@ private:
     }
 
 
-    void get_blocks_from_subchunk(compound_tag* sectionEntry, unsigned int chunkX, unsigned int chunkZ, unsigned int blockX,
+    void get_blocks_from_subchunk(compound_tag* sectionEntry, uint64_t chunkX, uint64_t chunkZ, unsigned int blockX,
         unsigned int blockZ, std::vector<Block>& blockList);
 
     void addSubchunk(compound_tag* sectionEntry, int32_t chunkX, int32_t chunkZ, std::array<int32_t, 2> blockOffset, std::shared_ptr<Chunk> chunk);
 
-    uint64_t getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t offset, unsigned int bitPerIndex);
+    uint64_t getPaletteIndex(std::vector<int64_t> const& blockStateEntries, uint64_t blockNumber, unsigned int bitPerIndex);
 
     /*!
      * Reads chunk information from the mca file at the given chunk
@@ -204,7 +204,6 @@ public:
     * Returns all blocks from lowerX, lowerZ to upperX, upperZ
     */
     std::vector<Block> get_blocks_in_range(unsigned int lowerX, unsigned int upperX, unsigned int lowerZ, unsigned int upperZ);
-
 
     /*
      * Returns a region's blocks at a given x, z coord in the given chunk
