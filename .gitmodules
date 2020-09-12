@@ -1,0 +1,6 @@
+[submodule "3rd_party/libanvil/zlib-ng"]
+	path = 3rd_party/libanvil/zlib-ng
+	url = https://github.com/zlib-ng/zlib-ng.git
+[submodule "3rd_party/zlib-ng"]
+	path = 3rd_party/zlib-ng
+	url = https://github.com/zlib-ng/zlib-ng.git
