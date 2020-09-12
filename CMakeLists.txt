@@ -19,6 +19,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/3rd_party/zlib-ng")
 # Compile main libanvil library
 add_library(libanvil
         include/Block.h src/Block.cpp
+        include/ChunkRegistry.h src/ChunkRegistry.cpp
         include/byte_stream.h src/byte_stream.cpp
         include/chunk_info.h src/chunk_info.cpp
         include/chunk_tag.h src/chunk_tag.cpp

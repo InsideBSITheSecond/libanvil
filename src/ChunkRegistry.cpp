@@ -1,4 +1,4 @@
-#include "ChunkRegistry.h"
+#include "../include/ChunkRegistry.h"
 
 ChunkRegistry::ChunkRegistry(const std::string &pathToRegionFolder)
         : m_PathToRegionFolder(pathToRegionFolder) {}
