@@ -208,7 +208,10 @@ void region_file_reader::addSubchunk(compound_tag* sectionEntry, int32_t chunkX,
     // Iterate through block states, calculate palette indices and query indices value
 
     // Calculate the number of required bits. Depends on the size of the palette
-    int bitPerIndex = ceil(log2(paletteEntries.size()));//static_cast<int>(blockStateEntries.size() * 64 / 4096);
+    int bitPerIndex = ceil(log2(paletteEntries.size()));
+    if (bitPerIndex < 4) {
+        bitPerIndex = 4; // 4 is the minimal size
+    }
 
     for (int subChunkCounter = 0; subChunkCounter < 16; ++subChunkCounter) { // From bottom to top
         uint64_t blockNumber = 16 * 16 * subChunkCounter + 16 * chunkZ + chunkX;

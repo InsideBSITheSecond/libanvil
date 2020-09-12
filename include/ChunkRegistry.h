@@ -13,7 +13,7 @@
 class ChunkRegistry {
 
 public:
-    ChunkRegistry(std::string const &pathToRegionFolder);
+    ChunkRegistry(std::string const pathToRegionFolder);
 
     ChunkRegistry(ChunkRegistry const &) = delete;
 

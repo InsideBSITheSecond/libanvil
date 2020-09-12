@@ -1,6 +1,6 @@
 #include "../include/ChunkRegistry.h"
 
-ChunkRegistry::ChunkRegistry(const std::string &pathToRegionFolder)
+ChunkRegistry::ChunkRegistry(const std::string pathToRegionFolder)
         : m_PathToRegionFolder(pathToRegionFolder) {}
 
 std::shared_ptr<Chunk> ChunkRegistry::getChunkByBlockCoord(int32_t x, int32_t z) {
