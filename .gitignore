@@ -3,3 +3,4 @@
 *.sublime-project
 build/*
 !build/.gitkeep
+.vscode/*
