@@ -23,6 +23,7 @@
 #include <cstdlib>
 #include <string>
 #include <vector>
+#include <stdint.h>
 
 class byte_stream {
 private:

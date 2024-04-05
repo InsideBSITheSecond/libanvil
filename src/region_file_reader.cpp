@@ -233,7 +233,7 @@ void region_file_reader::addSubchunk(compound_tag* sectionEntry, int32_t chunkX,
 }
 // ###############################################################################################################################
 
-std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsigned int chunkZ, unsigned int blockX, unsigned int BlockZ) {
+std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsigned int chunkZ, unsigned int blockX, unsigned int blockZ) {
     std::vector<generic_tag*> sections;
     unsigned int pos = chunkZ * region_dim::CHUNK_WIDTH + chunkX;
 
@@ -259,13 +259,15 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsign
     list_tag* subChunk = static_cast<list_tag*>(sections[0]);
     for (int i = 0; i < subChunk->size(); ++i) {
         compound_tag* subChunkEntry = static_cast<compound_tag*>(subChunk->at(i));
-        // std::vector<Block> subchunkBlocks = get_blocks_from_subchunk(subChunkEntry, blockX, BlockZ);
+        std::vector<Block> subchunkBlocks;
 
-        //for (Block& b : subchunkBlocks) {
-        //    std::array<int, 3> blockPosInChunk = b.getPos();
-        //    b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
-        //}
-        //foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
+		get_blocks_from_subchunk(subChunkEntry, chunkX, chunkZ, blockX, blockZ, subchunkBlocks);
+
+        for (Block& b : subchunkBlocks) {
+            std::array<int, 3> blockPosInChunk = b.getPos();
+            b.setPos(blockPosInChunk[0] + blockIdX, blockPosInChunk[1], blockPosInChunk[2] + blockIdZ);
+        }
+        foundBlocks.insert(foundBlocks.end(), subchunkBlocks.begin(), subchunkBlocks.end());
     }//for sectionEntries (aka subchunks)
 
     return foundBlocks;
@@ -350,22 +352,23 @@ void region_file_reader::get_blocks_from_subchunk(compound_tag* sectionEntry, ui
     int bitPerIndex = static_cast<int>(blockStateEntries.size() * 64 / 4096);
 
     for (uint64_t y = 0; y < 16; ++y) {
-        uint64_t blockNumber = 16 * 16 * y + 16 * chunkZ + chunkX;
+		uint64_t blockNumber = 16*16*y + 16*blockZ + blockX;
         uint64_t indexOffset = blockNumber * bitPerIndex;
 
-        uint64_t paletteIndex = getPaletteIndex(blockStateEntries, indexOffset, bitPerIndex);
+        uint64_t paletteIndex = getPaletteIndex(blockStateEntries, blockNumber, bitPerIndex);
 
         if (paletteIndex >= paletteEntries.size()) {
-            throw std::out_of_range("Palette index out-of-range");
+            //throw std::out_of_range("Palette index out-of-range");
+			continue;
         }
         generic_tag* compountEntry = static_cast<compound_tag*>(paletteEntries[paletteIndex])->get_subtag("Name");
         std::string name = static_cast<string_tag*>(compountEntry)->get_value();
-        name.erase(0, 10); // Erase minecraft:
+        //name.erase(0, 10); // Erase minecraft:
 
         int realY = yPos * 16 + y;
 
-        int blockPosX = chunkX + blockX;
-        int blockPosZ = chunkZ + blockZ;
+        int blockPosX = blockX;
+        int blockPosZ = blockZ;
         Block block(name, { blockPosX, realY, blockPosZ });
         blockList.push_back(block);
     }

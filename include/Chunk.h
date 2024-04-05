@@ -2,12 +2,13 @@
 
 #include <map>
 #include <optional>
+#include <stdint.h>
 #include "Block.h"
 
 
 class Chunk {
 public:
-    Chunk(std::array<std::int32_t, 2> chunkPos)
+    Chunk(std::array<int32_t, 2> chunkPos)
         : m_ChunkPos(chunkPos) {
     }
 
