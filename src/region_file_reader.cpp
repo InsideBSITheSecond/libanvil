@@ -241,6 +241,8 @@ std::vector<Block> region_file_reader::get_blocks_at(unsigned int chunkX, unsign
 
     // For debug
     std::vector<generic_tag*> xPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("xPos");
+	if (!xPosEntries.size())
+		return {};
     int xPos = static_cast<int_tag*>(xPosEntries.at(0))->get_value();
     int blockIdX = xPos * 16;
     std::vector<generic_tag*> zPosEntries = reg.get_tag_at(pos).get_sub_tag_by_name("zPos");
