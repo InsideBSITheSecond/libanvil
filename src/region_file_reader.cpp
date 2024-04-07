@@ -378,7 +378,7 @@ uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockSt
     uint64_t paletteIndex = 0;
 
     // Slight changes in 1.16:
-    if (bitPerIndex % 2 != 0) {
+    /*if (bitPerIndex % 2 != 0) {
         // Highest bits will not be used, eg at 5 bits the highest 4 bit wont be used.
         uint8_t numberOfStatesPerEntry = 64 / bitPerIndex;
         uint16_t vectorIndexForBlockOfInterest = (blockNumber / numberOfStatesPerEntry);
@@ -390,7 +390,7 @@ uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockSt
 
         paletteIndex = getBits(blockStateEntries[vectorIndexForBlockOfInterest], lowerBound, upperBound);
     }
-    else {
+    else {*/
         unsigned int indexOfInterest = (blockNumber * bitPerIndex) / 64;
         unsigned int lowerBound = (blockNumber * bitPerIndex) % 64;
         unsigned int upperBound = lowerBound + bitPerIndex;
@@ -407,7 +407,7 @@ uint64_t region_file_reader::getPaletteIndex(std::vector<int64_t> const& blockSt
         else {
             paletteIndex = getBits(blockStateEntries[indexOfInterest], lowerBound, upperBound);
         }
-    }
+	//}
 
     return paletteIndex;
 }
