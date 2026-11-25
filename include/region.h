@@ -69,7 +69,7 @@ public:
     /*
      * Region destructor
      */
-    virtual ~region(void) { return; }
+    virtual ~region(void) { return; } // each chunk_tag frees its own sub-tags
 
     /*
      * Region assignment operator

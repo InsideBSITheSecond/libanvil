@@ -48,7 +48,12 @@ public:
     /*
      * Chunk tag constructor
      */
-    chunk_tag(const chunk_tag& other) : root(other.root) { return; }
+    chunk_tag(const chunk_tag& other) { copy(const_cast<chunk_tag&>(other)); }
+
+    /*
+     * Chunk tag move constructor (takes ownership of other's sub-tags)
+     */
+    chunk_tag(chunk_tag&& other) noexcept : root(other.root) { other.root.get_value().clear(); }
 
     /*
      * Chunk tag constructor
@@ -64,6 +69,11 @@ public:
      * Chunk tag assignment operator
      */
     chunk_tag& operator=(const chunk_tag& other);
+
+    /*
+     * Chunk tag move assignment operator (takes ownership of other's sub-tags)
+     */
+    chunk_tag& operator=(chunk_tag&& other) noexcept;
 
     /*
      * Chunk tag equals operator

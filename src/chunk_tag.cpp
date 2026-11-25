@@ -28,6 +28,7 @@
 #include "../include/tag/int_array_tag.h"
 #include "../include/tag/list_tag.h"
 #include "../include/tag/long_tag.h"
+#include "../include/tag/long_array_tag.h"
 #include "../include/tag/short_tag.h"
 #include "../include/tag/string_tag.h"
 
@@ -40,8 +41,17 @@ chunk_tag& chunk_tag::operator=(const chunk_tag& other) {
     if (this == &other)
         return *this;
 
-    // assign attributes
+    // deep copy: the sub-tags are owned by this chunk tag and freed in clean_root
+    copy(const_cast<chunk_tag&>(other));
+    return *this;
+}
+
+chunk_tag& chunk_tag::operator=(chunk_tag&& other) noexcept {
+    if (this == &other)
+        return *this;
+    clean_root();
     root = other.root;
+    other.root.get_value().clear();
     return *this;
 }
 
@@ -135,6 +145,9 @@ generic_tag* chunk_tag::copy_tag(generic_tag* src) {
         case generic_tag::INT_ARRAY:
             tag = copy_tag_helper<int_array_tag>(src);
             break;
+        case generic_tag::LONG_ARRAY:
+            tag = copy_tag_helper<long_array_tag>(src);
+            break;
     }
     return tag;
 }
@@ -148,6 +161,7 @@ void chunk_tag::clean_root(void) {
     for (unsigned int i = 0; i < root.size(); ++i) {
         clean_tag(root.at(i));
     }
+    root.get_value().clear();
 }
 
 /*

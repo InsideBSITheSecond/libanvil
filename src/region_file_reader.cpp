@@ -704,11 +704,9 @@ void region_file_reader::read_chunk(uint16_t x, uint16_t z) {
         throw std::out_of_range("Chunk at " + std::to_string(x) + "|" + std::to_string(z) + " is empty");
 
     // Retrieve raw data
-    char* raw_data = new char[info.get_length()];
-    std::vector<char> raw_vec;
+    std::vector<char> raw_vec(info.get_length());
     file.seekg(info.get_offset(), std::ios::beg);
-    file.read((char*) raw_data, info.get_length());
-    raw_vec.assign(raw_data, raw_data + info.get_length());
+    file.read(raw_vec.data(), info.get_length());
 
     // check for compression type
     switch (info.get_type()) {
