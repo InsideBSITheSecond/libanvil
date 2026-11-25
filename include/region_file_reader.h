@@ -20,6 +20,7 @@
 #ifndef REGION_FILE_READER_H_
 #define REGION_FILE_READER_H_
 
+#include <cstdint>
 #include <fstream>
 #include <stdexcept>
 #include <string>

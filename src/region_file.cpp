@@ -76,7 +76,7 @@ bool region_file::is_region_file(const std::string& path, int& x, int& z) {
     // parse the filename for coordinants
     std::cmatch ref;
     std::stringstream stream;
-    std::string name = path.substr(path.find_last_of('/') + 1);
+    std::string name = path.substr(path.find_last_of("/\\") + 1); // both separators, for Windows paths
     if (!std::regex_match(name.c_str(), ref, PATTERN))
         return false;
     stream << ref[1];
